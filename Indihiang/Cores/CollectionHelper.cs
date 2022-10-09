@@ -12,7 +12,7 @@ namespace Indihiang.Cores
         {
             List<KeyValuePair<string, List<double>>> result = new List<KeyValuePair<string, List<double>>>(data);
             result.Sort(
-              delegate(
+              delegate (
                 KeyValuePair<string, List<double>> first,
                 KeyValuePair<string, List<double>> second)
               {
@@ -33,13 +33,13 @@ namespace Indihiang.Cores
                 newList.Add(result[i].Key, result[i].Value);
 
             return newList;
-
         }
+
         public static Dictionary<string, int> SortList(Dictionary<string, int> data)
         {
             List<KeyValuePair<string, int>> result = new List<KeyValuePair<string, int>>(data);
             result.Sort(
-              delegate(
+              delegate (
                 KeyValuePair<string, int> first,
                 KeyValuePair<string, int> second)
               {
@@ -52,8 +52,6 @@ namespace Indihiang.Cores
                 newList.Add(result[i].Key, result[i].Value);
 
             return newList;
-
         }
-        
     }
 }

@@ -17,7 +17,7 @@ namespace Indihiang.Modules
         private SynchronizationContext _synContext;
         private string _guid;
         private string _fileName;
-        private List<string> _listYears = new List<string>(); 
+        private List<string> _listYears = new List<string>();
         private long _totalBytesSent;
         private long _totalBytesReceived;
         private List<DumpData> _listSentReceivedBytesByYear;
@@ -25,7 +25,8 @@ namespace Indihiang.Modules
         private List<DumpData> _listSentBytesPageByYear2;
         private List<DumpData> _listReceivedBytesPageByYear1;
         private List<DumpData> _listReceivedBytesPageByYear2;
-        private List<DumpData> _listSentReceivedBytesIPClientByYear;        
+        private List<DumpData> _listSentReceivedBytesIPClientByYear;
+
         public BandwidthControl()
         {
             InitializeComponent();
@@ -58,6 +59,7 @@ namespace Indihiang.Modules
                 _fileName = value;
             }
         }
+
         public List<string> ListOfYear
         {
             set
@@ -69,12 +71,13 @@ namespace Indihiang.Modules
                 return _listYears;
             }
         }
+
         public void Populate()
         {
             cboParams1.Items.AddRange(_listYears.ToArray());
             cboParams2.Items.AddRange(_listYears.ToArray());
             cboParams3.Items.AddRange(_listYears.ToArray());
-            cboParams4.Items.AddRange(_listYears.ToArray());            
+            cboParams4.Items.AddRange(_listYears.ToArray());
 
             SetGridLayout();
             backgroundWorker1.RunWorkerAsync();
@@ -82,7 +85,6 @@ namespace Indihiang.Modules
             RenderInfoEventArgs info = new RenderInfoEventArgs(_guid, LogFeature.BANDWIDTH, _fileName);
             _synContext.Post(OnRenderHandler, info);
         }
-
         #endregion
 
         protected virtual void OnRenderHandler(RenderInfoEventArgs e)
@@ -97,6 +99,7 @@ namespace Indihiang.Modules
             lbBytesReceived.Text = IndihiangHelper.BytesFormat(_totalBytesReceived);
             lbTotal.Text = IndihiangHelper.BytesFormat(_totalBytesSent + _totalBytesReceived);
         }
+
         private void SetGridLayout()
         {
             dataGridViewBytes1.ColumnCount = 2;
@@ -165,26 +168,24 @@ namespace Indihiang.Modules
 
             dataGridViewIPClient.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewIPClient.MultiSelect = false;
-
         }
 
         private void GenerateSentReceivedBytesByYear()
         {
-            GraphPane pane = zedGraphBytesInOut.GraphPane;           
+            GraphPane pane = zedGraphBytesInOut.GraphPane;
             pane.CurveList.Clear();
 
             pane.Title.Text = "The Bytes Sent and Received Graph";
             pane.XAxis.Title.Text = "Date";
             pane.XAxis.Type = AxisType.DateAsOrdinal;
             pane.XAxis.Scale.Format = "MMM-dd";
-            pane.YAxis.Title.Text = "Total Bytes";            
+            pane.YAxis.Title.Text = "Total Bytes";
             pane.Chart.Fill = new Fill(Color.White, Color.FromArgb(255, 255, 166), 90F);
             pane.Fill = new Fill(Color.FromArgb(250, 250, 255));
 
-
             if (_listSentReceivedBytesByYear.Count > 0)
             {
-                double x, y1,y2;
+                double x, y1, y2;
                 PointPairList list1 = new PointPairList();
                 PointPairList list2 = new PointPairList();
 
@@ -200,7 +201,6 @@ namespace Indihiang.Modules
                     list2.Add(x, y2);
                 }
 
-
                 LineItem line1 = pane.AddCurve("Bytes Sent", list1, Color.Red, SymbolType.Star);
                 LineItem line2 = pane.AddCurve("Bytes Received", list2, Color.FromArgb(0, 128, 0), SymbolType.Star);
 
@@ -214,16 +214,15 @@ namespace Indihiang.Modules
             _listSentReceivedBytesByYear.Clear();
         }
 
-        
         private void GenerateSentBytesPageByYear()
         {
             dataGridViewBytes1.Rows.Clear();
             dataGridViewBytes2.Rows.Clear();
-            
+
             string selectedYear = cboParams2.SelectedItem.ToString();
             int year = Convert.ToInt32(selectedYear);
             if (_listSentBytesPageByYear1.Count > 0)
-            {                
+            {
                 for (int i = 0; i < _listSentBytesPageByYear1.Count; i++)
                 {
                     DateTime dt = new DateTime(year, _listSentBytesPageByYear1[i].Month, _listSentBytesPageByYear1[i].Day);
@@ -237,7 +236,7 @@ namespace Indihiang.Modules
             if (_listSentBytesPageByYear2.Count > 0)
             {
                 for (int i = 0; i < _listSentBytesPageByYear2.Count; i++)
-                {                    
+                {
                     List<object> data = new List<object>();
                     data.Add(_listSentBytesPageByYear2[i].Page_Access);
                     data.Add(_listSentBytesPageByYear2[i].Bytes_Sent);
@@ -248,6 +247,7 @@ namespace Indihiang.Modules
             _listSentBytesPageByYear1.Clear();
             _listSentBytesPageByYear2.Clear();
         }
+
         private void GenerateReceivedBytesPageByYear()
         {
             dataGridViewByteReceived1.Rows.Clear();
@@ -284,12 +284,12 @@ namespace Indihiang.Modules
 
         private void GenerateIPClientReceivedBytesByYear()
         {
-            dataGridViewIPClient.Rows.Clear();            
+            dataGridViewIPClient.Rows.Clear();
 
             if (_listSentReceivedBytesIPClientByYear.Count > 0)
             {
                 for (int i = 0; i < _listSentReceivedBytesIPClientByYear.Count; i++)
-                {                    
+                {
                     List<object> data = new List<object>();
 
                     data.Add(_listSentReceivedBytesIPClientByYear[i].Client_IP);
@@ -305,7 +305,6 @@ namespace Indihiang.Modules
 
             _listSentReceivedBytesIPClientByYear.Clear();
         }
-
 
         private void SetSize()
         {
@@ -410,7 +409,7 @@ namespace Indihiang.Modules
 
         private void backgroundWorker3_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (_listSentBytesPageByYear1 != null || _listSentBytesPageByYear2!=null)
+            if (_listSentBytesPageByYear1 != null || _listSentBytesPageByYear2 != null)
             {
                 // populate 
                 GenerateSentBytesPageByYear();
@@ -458,7 +457,7 @@ namespace Indihiang.Modules
                 string par = e.Argument.ToString();
                 LogDataFacade facade = new LogDataFacade(_guid);
 
-                _listSentReceivedBytesIPClientByYear = new List<DumpData>(facade.GetClientIPSentReceivedBytesByYear(Convert.ToInt32(par)));                
+                _listSentReceivedBytesIPClientByYear = new List<DumpData>(facade.GetClientIPSentReceivedBytesByYear(Convert.ToInt32(par)));
             }
             catch (Exception err)
             {
@@ -528,9 +527,5 @@ namespace Indihiang.Modules
             btnGenerate4.Enabled = false;
             backgroundWorker5.RunWorkerAsync(cboParams4.SelectedItem);
         }
-
-        
-
-   
     }
 }

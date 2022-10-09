@@ -36,7 +36,6 @@ namespace Indihiang.Modules
             }
         }
 
-
         public void AddLogStatus(string logMessage)
         {
             string newLog = String.Format("\r\n{0}", logMessage);
@@ -47,8 +46,9 @@ namespace Indihiang.Modules
                 SendMessage(txtLog.Handle, EM_SETMODIFY, new IntPtr(0), IntPtr.Zero);
             }
             else
-                txtLog.AppendText(newLog);                      
+                txtLog.AppendText(newLog);
         }
+
         public void Populate(LogParser parser)
         {
             _guidReportId = parser.LogParserId;
@@ -60,7 +60,7 @@ namespace Indihiang.Modules
         private List<string> GetListOfYear(string guid)
         {
             LogDataFacade facade = new LogDataFacade(guid);
-            
+
             return facade.GetListyearLogFile();
         }
 
@@ -77,7 +77,7 @@ namespace Indihiang.Modules
                 listOfYear.Add(IndihiangHelper.GetYearDataIndihiangFile(parser.FileName));
 
 
-            _totalControls = 9;
+            _totalControls = 11;
             info = String.Format("{0:yyyy/MM/dd HH:mm:ss}[info]: {1}", DateTime.Now, "Populating data on GENERAL...");
             AddLogStatus(info);
             id = LogFeature.GENERAL.ToString();
@@ -89,7 +89,28 @@ namespace Indihiang.Modules
                 uc1.FeatureGuid = string.Format("!!{0}", parser.FileName);
             Attach(uc1, id, "General");
 
-            
+            info = String.Format("{0:yyyy/MM/dd HH:mm:ss}[info]: {1}", DateTime.Now, "Populating data on FILTER...");
+            AddLogStatus(info);
+            id = LogFeature.FILTER.ToString();
+            FilterControl uc11 = new FilterControl();
+            uc11.FileName = parser.FileName;
+            if (!parser.UseExistData)
+                uc11.FeatureGuid = parser.LogParserId.ToString();
+            else
+                uc11.FeatureGuid = string.Format("!!{0}", parser.FileName);
+            foreach (string file in IndihiangHelper.GetIndihiangFileList(uc11.FeatureGuid))
+            {
+                uc11.FilterPage = IndihiangHelper.GetFilterDataIndihiangFile(file, "page");
+                uc11.FilterClientIP = IndihiangHelper.GetFilterDataIndihiangFile(file, "client_ip");
+                uc11.FilterServerIP = IndihiangHelper.GetFilterDataIndihiangFile(file, "server_ip");
+                uc11.FilterUsername = IndihiangHelper.GetFilterDataIndihiangFile(file, "username");
+                uc11.FilterDateFrom = IndihiangHelper.GetFilterDataIndihiangFile(file, "date_from");
+                uc11.FilterDateTo = IndihiangHelper.GetFilterDataIndihiangFile(file, "date_to");
+                break;
+            }
+            Attach(uc11, id, "Filter");
+
+
             info = String.Format("{0:yyyy/MM/dd HH:mm:ss}[info]: {1}", DateTime.Now, "Populating data on USERAGENT...");
             AddLogStatus(info);
             id = LogFeature.USERAGENT.ToString();
@@ -102,7 +123,7 @@ namespace Indihiang.Modules
             uc2.ListOfYear = listOfYear;
             Attach(uc2, id, "User Agent");
 
-           
+
             info = String.Format("{0:yyyy/MM/dd HH:mm:ss}[info]: {1}", DateTime.Now, "Populating data on HITS...");
             AddLogStatus(info);
             id = LogFeature.HITS.ToString();
@@ -115,7 +136,7 @@ namespace Indihiang.Modules
             uc3.ListOfYear = listOfYear;
             Attach(uc3, id, "Hits");
 
-           
+
             info = String.Format("{0:yyyy/MM/dd HH:mm:ss}[info]: {1}", DateTime.Now, "Populating data on ACCESS...");
             AddLogStatus(info);
             id = LogFeature.ACCESS.ToString();
@@ -128,7 +149,7 @@ namespace Indihiang.Modules
             uc4.ListOfYear = listOfYear;
             Attach(uc4, id, "Access Page");
 
-            
+
             info = String.Format("{0:yyyy/MM/dd HH:mm:ss}[info]: {1}", DateTime.Now, "Populating data on IPADDRESS...");
             AddLogStatus(info);
             id = LogFeature.IPADDRESS.ToString();
@@ -141,56 +162,70 @@ namespace Indihiang.Modules
             uc5.ListOfYear = listOfYear;
             Attach(uc5, id, "IP Address");
 
-           info = String.Format("{0:yyyy/MM/dd HH:mm:ss}[info]: {1}", DateTime.Now, "Populating data on STATUS...");
-           AddLogStatus(info);
-           id = LogFeature.STATUS.ToString();
-           AccessStatusControl uc6 = new AccessStatusControl();
-           uc6.FileName = parser.FileName;
-           if (!parser.UseExistData)
-               uc6.FeatureGuid = parser.LogParserId.ToString();
-           else
-               uc6.FeatureGuid = string.Format("!!{0}", parser.FileName);
-           uc6.ListOfYear = listOfYear;
-           Attach(uc6, id, "HTTP Status");
 
-            
-           info = String.Format("{0:yyyy/MM/dd HH:mm:ss}[info]: {1}", DateTime.Now, "Populating data on BANDWIDTH...");
-           AddLogStatus(info);
-           id = LogFeature.BANDWIDTH.ToString();
-           BandwidthControl uc7 = new BandwidthControl();
-           uc7.FileName = parser.FileName;
-           if (!parser.UseExistData)
-               uc7.FeatureGuid = parser.LogParserId.ToString();
-           else
-               uc7.FeatureGuid = string.Format("!!{0}", parser.FileName);
-           uc7.ListOfYear = listOfYear;
-           Attach(uc7, id, "Bandwidth");
+            info = String.Format("{0:yyyy/MM/dd HH:mm:ss}[info]: {1}", DateTime.Now, "Populating data on STATUS...");
+            AddLogStatus(info);
+            id = LogFeature.STATUS.ToString();
+            AccessStatusControl uc6 = new AccessStatusControl();
+            uc6.FileName = parser.FileName;
+            if (!parser.UseExistData)
+                uc6.FeatureGuid = parser.LogParserId.ToString();
+            else
+                uc6.FeatureGuid = string.Format("!!{0}", parser.FileName);
+            uc6.ListOfYear = listOfYear;
+            Attach(uc6, id, "HTTP Status");
 
-             
-           info = String.Format("{0:yyyy/MM/dd HH:mm:ss}[info]: {1}", DateTime.Now, "Populating data on REQUEST...");
-           AddLogStatus(info);
-           id = LogFeature.REQUEST.ToString();
-           RequestProcessingControl uc8 = new RequestProcessingControl();
-           uc8.FileName = parser.FileName;
-           if (!parser.UseExistData)
-               uc8.FeatureGuid = parser.LogParserId.ToString();
-           else
-               uc8.FeatureGuid = string.Format("!!{0}", parser.FileName);
-           uc8.ListOfYear = listOfYear;
-           Attach(uc8, id, "Processing Request");
 
-           info = String.Format("{0:yyyy/MM/dd HH:mm:ss}[info]: {1}", DateTime.Now, "Populating data on REFERER...");
-           AddLogStatus(info);
-           id = LogFeature.REFERER.ToString();
-           RefererControl uc9 = new RefererControl();
-           uc9.FileName = parser.FileName;
-           if (!parser.UseExistData)
-               uc9.FeatureGuid = parser.LogParserId.ToString();
-           else
-               uc9.FeatureGuid = string.Format("!!{0}", parser.FileName);
-           uc9.ListOfYear = listOfYear;
-           Attach(uc9, id, "Referer");
-           
+            info = String.Format("{0:yyyy/MM/dd HH:mm:ss}[info]: {1}", DateTime.Now, "Populating data on BANDWIDTH...");
+            AddLogStatus(info);
+            id = LogFeature.BANDWIDTH.ToString();
+            BandwidthControl uc7 = new BandwidthControl();
+            uc7.FileName = parser.FileName;
+            if (!parser.UseExistData)
+                uc7.FeatureGuid = parser.LogParserId.ToString();
+            else
+                uc7.FeatureGuid = string.Format("!!{0}", parser.FileName);
+            uc7.ListOfYear = listOfYear;
+            Attach(uc7, id, "Bandwidth");
+
+
+            info = String.Format("{0:yyyy/MM/dd HH:mm:ss}[info]: {1}", DateTime.Now, "Populating data on REQUEST...");
+            AddLogStatus(info);
+            id = LogFeature.REQUEST.ToString();
+            RequestProcessingControl uc8 = new RequestProcessingControl();
+            uc8.FileName = parser.FileName;
+            if (!parser.UseExistData)
+                uc8.FeatureGuid = parser.LogParserId.ToString();
+            else
+                uc8.FeatureGuid = string.Format("!!{0}", parser.FileName);
+            uc8.ListOfYear = listOfYear;
+            Attach(uc8, id, "Processing Request");
+
+            info = String.Format("{0:yyyy/MM/dd HH:mm:ss}[info]: {1}", DateTime.Now, "Populating data on REFERER...");
+            AddLogStatus(info);
+            id = LogFeature.REFERER.ToString();
+            RefererControl uc9 = new RefererControl();
+            uc9.FileName = parser.FileName;
+            if (!parser.UseExistData)
+                uc9.FeatureGuid = parser.LogParserId.ToString();
+            else
+                uc9.FeatureGuid = string.Format("!!{0}", parser.FileName);
+            uc9.ListOfYear = listOfYear;
+            Attach(uc9, id, "Referer");
+
+
+            info = String.Format("{0:yyyy/MM/dd HH:mm:ss}[info]: {1}", DateTime.Now, "Populating data on ACCESS_USERNAME...");
+            AddLogStatus(info);
+            id = LogFeature.ACCESS_USERNAME.ToString();
+            AccessUsernameControl uc10 = new AccessUsernameControl();
+            uc10.FileName = parser.FileName;
+            if (!parser.UseExistData)
+                uc10.FeatureGuid = parser.LogParserId.ToString();
+            else
+                uc10.FeatureGuid = string.Format("!!{0}", parser.FileName);
+            uc10.ListOfYear = listOfYear;
+            Attach(uc10, id, "Access Username");
+
             tabMainLog.SelectedTab = tabMainLog.TabPages[LogFeature.GENERAL.ToString()];
         }
 
@@ -224,8 +259,8 @@ namespace Indihiang.Modules
             uc.Start();
 
             tabMainLog.SelectedTab = tabMainLog.TabPages[_loadingId.ToString()];
-
         }
+
         public void HideLoadingControl()
         {
             for (int i = 0; i < tabMainLog.TabPages[_loadingId.ToString()].Controls.Count; i++)
@@ -248,11 +283,10 @@ namespace Indihiang.Modules
             cboStatus.SelectedIndex = 0;
         }
 
-
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
         static extern IntPtr SendMessage(IntPtr hWnd, Int32 Msg, IntPtr wParam, IntPtr lParam);
+
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
         static extern IntPtr SendMessage(IntPtr hWnd, Int32 Msg, IntPtr wParam, String lParam);
-
     }
 }

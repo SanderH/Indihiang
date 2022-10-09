@@ -11,10 +11,8 @@ namespace Indihiang.Cores
     {
         private RemoteFileCopyHelper() { }
 
-
         [DllImport("advapi32.DLL", SetLastError = true)]
         public static extern int LogonUser(string lpszUsername, string lpszDomain, string lpszPassword, int dwLogonType, int dwLogonProvider, ref IntPtr phToken);
-
 
         public static bool CopyRemoteFiles(IISInfo iisInfo)
         {
@@ -27,12 +25,12 @@ namespace Indihiang.Cores
 
             try
             {
-                
+
                 string uid = "";
                 string domain = "";
                 string tmp = iisInfo.IISUserId;
                 if (tmp.Contains("\\"))
-                {                    
+                {
                     string[] temp1 = tmp.Split(new char[] { '\\' });
                     if (temp1 != null)
                     {
@@ -79,14 +77,13 @@ namespace Indihiang.Cores
                             File.Copy(s, destFile, true);
                         });
                     }
-                    success = true;                    
+                    success = true;
                 }
-
             }
             catch (Exception err)
             {
                 System.Diagnostics.Debug.WriteLine(String.Format("Error CopyRemoteFiles: {0}", err.Message));
-                System.Diagnostics.Debug.WriteLine(String.Format("Error CopyRemoteFiles: {0}", err.StackTrace)); 
+                System.Diagnostics.Debug.WriteLine(String.Format("Error CopyRemoteFiles: {0}", err.StackTrace));
             }
 
             return success;
@@ -105,8 +102,6 @@ namespace Indihiang.Cores
                 string[] filePaths = Directory.GetFiles(String.Format("{0}\\Temp\\{1}{2}\\", path, iisInfo.RemoteServer, iisInfo.Id));
                 Array.ForEach(filePaths, File.Delete);
             }
-            
         }
-
     }
 }

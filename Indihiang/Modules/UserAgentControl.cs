@@ -13,7 +13,7 @@ using Indihiang.DomainObject;
 using ZedGraph;
 namespace Indihiang.Modules
 {
-    public partial class UserAgentControl : UserControl,BaseControl
+    public partial class UserAgentControl : UserControl, BaseControl
     {
         private SynchronizationContext _synContext;
         private string _guid;
@@ -55,6 +55,7 @@ namespace Indihiang.Modules
                 _fileName = value;
             }
         }
+
         public List<string> ListOfYear
         {
             set
@@ -69,7 +70,7 @@ namespace Indihiang.Modules
 
         public void Populate()
         {
-            backgroundJob.RunWorkerAsync();            
+            backgroundJob.RunWorkerAsync();
         }
         #endregion
 
@@ -96,11 +97,11 @@ namespace Indihiang.Modules
                 pane.XAxis.Type = AxisType.DateAsOrdinal;
                 pane.XAxis.Scale.Format = "MMM-dd-yyyy";
             }
-            
+
             pane.XAxis.Title.Text = "Time";
             pane.YAxis.Title.Text = "Total Hits";
             pane.Legend.Position = LegendPos.Bottom;
-            pane.Chart.Fill = new Fill(Color.White,Color.SkyBlue, 90F);
+            pane.Chart.Fill = new Fill(Color.White, Color.SkyBlue, 90F);
             pane.Fill = new Fill(Color.FromArgb(250, 250, 255));
 
             if (_listAgentData.Count > 0)
@@ -150,7 +151,7 @@ namespace Indihiang.Modules
                         }
                     }
                 }
-           
+
                 foreach (KeyValuePair<string, PointPairList> item in list)
                 {
                     LineItem curve = null;
@@ -181,59 +182,58 @@ namespace Indihiang.Modules
                         curve.Line.IsSmooth = true;
                         curve.Line.SmoothTension = 0.5F;
                     }
-                    
                 }
-             
             }
 
             zedUserAgent1.IsShowPointValues = true;
             zedUserAgent1.AxisChange();
         }
+
         private void GenerateGraphUserAgent2()
         {
             GraphPane pane = zedUserAgent2.GraphPane;
 
-            pane.Title.Text = "User Agent Percent Graph";            
+            pane.Title.Text = "User Agent Percent Graph";
             pane.Legend.Position = LegendPos.InsideTopRight;
             pane.Chart.Fill = new Fill(Color.White, Color.SkyBlue, 90F);
             pane.Fill = new Fill(Color.FromArgb(250, 250, 255));
 
             if (_listPerAgent.Count > 0)
             {
-                double total = _listPerAgent.Values.Sum();                
+                double total = _listPerAgent.Values.Sum();
                 foreach (KeyValuePair<string, long> item in _listPerAgent)
-                {                    
+                {
                     if (item.Key == "MS Internet Explorer")
-                        pane.AddPieSlice(item.Value, 
-                            Color.Blue, 
-                            Color.White, 45f, 0.2, 
-                            item.Key + " (" + 
-                            string.Format("{0:0.##}",(double)(item.Value*100/total))+ " %)");
+                        pane.AddPieSlice(item.Value,
+                            Color.Blue,
+                            Color.White, 45f, 0.2,
+                            item.Key + " (" +
+                            string.Format("{0:0.##}", (double)(item.Value * 100 / total)) + " %)");
                     if (item.Key == "Firefox")
-                        pane.AddPieSlice(item.Value, 
-                            Color.Red, 
-                            Color.White, 45f, 0, 
+                        pane.AddPieSlice(item.Value,
+                            Color.Red,
+                            Color.White, 45f, 0,
                             item.Key + " (" +
                             string.Format("{0:0.##}", (double)(item.Value * 100 / total)) + " %)");
                     if (item.Key == "Safari")
-                        pane.AddPieSlice(item.Value, 
-                            Color.Green, 
-                            Color.White, 45f, 0, 
+                        pane.AddPieSlice(item.Value,
+                            Color.Green,
+                            Color.White, 45f, 0,
                             item.Key + " (" +
                             string.Format("{0:0.##}", (double)(item.Value * 100 / total)) + " %)");
                     if (item.Key == "Google Chrome")
-                        pane.AddPieSlice(item.Value, 
+                        pane.AddPieSlice(item.Value,
                             Color.Cyan,
                             Color.White, 45f, 0, item.Key + " (" +
                             string.Format("{0:0.##}", (double)(item.Value * 100 / total)) + " %)");
                     if (item.Key == "Opera")
-                        pane.AddPieSlice(item.Value, 
-                            Color.Purple, 
+                        pane.AddPieSlice(item.Value,
+                            Color.Purple,
                             Color.White, 45f, 0, item.Key + " (" +
                             string.Format("{0:0.##}", (double)(item.Value * 100 / total)) + " %)");
                     if (item.Key == "Netscape")
-                        pane.AddPieSlice(item.Value, 
-                            Color.Brown, 
+                        pane.AddPieSlice(item.Value,
+                            Color.Brown,
                             Color.White, 45f, 0, item.Key + " (" +
                             string.Format("{0:0.##}", (double)(item.Value * 100 / total)) + " %)");
                     if (item.Key == "Mobile Browser")
@@ -242,19 +242,18 @@ namespace Indihiang.Modules
                             Color.White, 45f, 0, item.Key + " (" +
                             string.Format("{0:0.##}", (double)(item.Value * 100 / total)) + " %)");
                     if (item.Key == "Unknown")
-                        pane.AddPieSlice(item.Value, Color.Black, 
+                        pane.AddPieSlice(item.Value, Color.Black,
                             Color.White, 45f, 0.2, item.Key + " (" +
                             string.Format("{0:0.##}", (double)(item.Value * 100 / total)) + " %)");
                 }
-
             }
-
             zedUserAgent2.AxisChange();
         }
+
         private void SetSize()
         {
             zedUserAgent1.Location = new Point(10, 10);
-            zedUserAgent1.Size = new Size(ClientRectangle.Width - 20,ClientRectangle.Height - 20);
+            zedUserAgent1.Size = new Size(ClientRectangle.Width - 20, ClientRectangle.Height - 20);
             zedUserAgent2.Location = new Point(10, 10);
             zedUserAgent2.Size = new Size(ClientRectangle.Width - 20, ClientRectangle.Height - 20);
         }
@@ -270,8 +269,7 @@ namespace Indihiang.Modules
             DateTime date = DateTime.FromOADate(pt.X);
             string sdate = date.ToString("MMM-dd-yyyy");
 
-            return String.Format("{0}\r\nTime: {1}\r\nTotal: {2:f2} Hit(s)", curve.Label.Text,sdate, pt.Y);
-
+            return String.Format("{0}\r\nTime: {1}\r\nTotal: {2:f2} Hit(s)", curve.Label.Text, sdate, pt.Y);
         }
 
         private void backgroundJob_DoWork(object sender, DoWorkEventArgs e)
@@ -323,8 +321,8 @@ namespace Indihiang.Modules
                 if (_listYears != null)
                 {
                     cboParams.Items.AddRange(_listYears.ToArray());
-					if (cboParams.Items.Count > 0)
-						cboParams.SelectedIndex = 0;
+                    if (cboParams.Items.Count > 0)
+                        cboParams.SelectedIndex = 0;
                 }
             }
             if (cboReport.SelectedIndex == 1)
@@ -332,8 +330,8 @@ namespace Indihiang.Modules
                 if (_listYearMonth != null)
                 {
                     cboParams.Items.AddRange(_listYearMonth.ToArray());
-					if (cboParams.Items.Count > 0)
-						cboParams.SelectedIndex = 0;
+                    if (cboParams.Items.Count > 0)
+                        cboParams.SelectedIndex = 0;
                 }
             }
         }
@@ -345,15 +343,13 @@ namespace Indihiang.Modules
                 MessageBox.Show("Please choose report type and its parameter", "Information");
                 return;
             }
-            if (cboReport.SelectedIndex >=0)
+            if (cboReport.SelectedIndex >= 0)
             {
                 btnGenerate.Enabled = false;
                 lbStatus.Visible = true;
 
                 backgroundReportJob.RunWorkerAsync(cboParams.SelectedItem);
             }
-           
-
         }
 
         private void backgroundReportJob_DoWork(object sender, DoWorkEventArgs e)

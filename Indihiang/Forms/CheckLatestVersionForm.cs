@@ -66,8 +66,7 @@ namespace Indihiang.Forms
                     _targetDownload = "";
                     _ver = "";
                     CheckVersion(obj, current, latest);
-                }
-                
+                }                
 
                 e.Result = null;
             }

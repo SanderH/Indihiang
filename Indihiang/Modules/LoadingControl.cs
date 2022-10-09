@@ -16,6 +16,7 @@ namespace Indihiang.Modules
             _proggress = 0;
             timer1.Start();
         }
+
         public void Stop()
         {
             timer1.Stop();

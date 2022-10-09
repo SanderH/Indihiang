@@ -16,7 +16,7 @@ namespace Indihiang.Forms
         private TreeNode _logFileaNode;
         private TreeNode _computersNode;
         private TreeNode _reportFileNode;
-        private Dictionary<string, LogParser> _listParser = new Dictionary<string, LogParser>();
+        private readonly Dictionary<string, LogParser> _listParser = new Dictionary<string, LogParser>();
         private int _consolidationId;
 
         public MainForm()

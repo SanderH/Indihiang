@@ -2,7 +2,7 @@ using System;
 
 namespace Pe.Indhiang.Framework.Core.DomainObject
 {
-    public class W3cExtendedLog 
+    public class W3cExtendedLog
     {
         private string _date;
         private string _time;
@@ -38,6 +38,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _date = value;
             }
         }
+
         public string LogTime
         {
             get
@@ -51,6 +52,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _time = value;
             }
         }
+
         public string ClientIP
         {
             get
@@ -77,6 +79,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _cs_username = value;
             }
         }
+
         public string SiteName
         {
             get
@@ -90,6 +93,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _s_sitename = value;
             }
         }
+
         public string ComputerName
         {
             get
@@ -103,6 +107,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _s_computername = value;
             }
         }
+
         public string ServerIP
         {
             get
@@ -116,6 +121,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _s_ip = value;
             }
         }
+
         public string Port
         {
             get
@@ -129,6 +135,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _s_port = value;
             }
         }
+
         public string Method
         {
             get
@@ -142,6 +149,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _cs_method = value;
             }
         }
+
         public string UriStem
         {
             get
@@ -155,6 +163,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _cs_uri_stem = value;
             }
         }
+
         public string UriQuery
         {
             get
@@ -168,6 +177,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _cs_uri_query = value;
             }
         }
+
         public string Status
         {
             get
@@ -181,6 +191,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _cs_status = value;
             }
         }
+
         public string Win32Status
         {
             get
@@ -194,6 +205,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _sc_win32_status = value;
             }
         }
+
         public string Bytes
         {
             get
@@ -207,6 +219,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _sc_bytes = value;
             }
         }
+
         public string TimeTaken
         {
             get
@@ -220,6 +233,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _time_taken = value;
             }
         }
+
         public string Version
         {
             get
@@ -233,6 +247,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _cs_version = value;
             }
         }
+
         public string Host
         {
             get
@@ -246,6 +261,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _cs_host = value;
             }
         }
+
         public string UserAgent
         {
             get
@@ -259,6 +275,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _cs_user_agent = value;
             }
         }
+
         public string Cookie
         {
             get
@@ -272,6 +289,7 @@ namespace Pe.Indhiang.Framework.Core.DomainObject
                 _cs_cookie = value;
             }
         }
+
         public string Referer
         {
             get

@@ -25,18 +25,20 @@ namespace Indihiang.Data
                 _dbFile = value;
             }
         }
+
         public DataHelper(string file)
         {
             _dbFile = file;
         }
+
         public DataHelper()
         {
             _dbFile = "";
         }
-         
+
         private string GetConnectionStrng()
         {
-            return string.Format("Data Source={0}",_dbFile);
+            return $"Data Source={_dbFile}";
         }
 
         #region Indihiang
@@ -49,7 +51,7 @@ namespace Indihiang.Data
                 con = new SQLiteConnection(GetConnectionStrng());
                 con.Open();
 
-                string query = String.Format("insert into sys_indihiang(sys_item,sys_value) values('{0}','{1}')", obj.Sys_Item, obj.Sys_Value);
+                string query = $"insert into sys_indihiang(sys_item,sys_value) values('{obj.Sys_Item}','{obj.Sys_Value}') on conflict (sys_item) do update set sys_value = excluded.sys_value;";
                 using (SQLiteCommand cmd = new SQLiteCommand(query, con))
                 {
                     cmd.ExecuteNonQuery();
@@ -65,9 +67,9 @@ namespace Indihiang.Data
                 if (con != null)
                     con.Close();
             }
-
             return id;
         }
+
         public List<Indihiang.DomainObject.Indihiang> GetAllIndihiang()
         {
             SQLiteConnection con = null;
@@ -78,7 +80,7 @@ namespace Indihiang.Data
                 con = new SQLiteConnection(GetConnectionStrng());
                 con.Open();
 
-                string query = "select * from sys_indihiang";
+                string query = "select * from sys_indihiang;";
                 SQLiteCommand cmd = new SQLiteCommand(query, con);
                 rd = cmd.ExecuteReader();
                 while (rd.Read())
@@ -115,8 +117,6 @@ namespace Indihiang.Data
 
             return list;
         }
-
-
         #endregion
 
         #region LogData
@@ -129,7 +129,7 @@ namespace Indihiang.Data
                 con = new SQLiteConnection(GetConnectionStrng());
                 con.Open();
 
-                string query = String.Format("insert into logdata(logdate,logtime) values('{0}','{1}');select last_insert_rowid();", obj.LogDate, obj.LogTime);
+                string query = $"insert into logdata(logdate,logtime) values('{obj.LogDate}','{obj.LogTime}'); select last_insert_rowid();";
                 using (SQLiteCommand cmd = new SQLiteCommand(query, con))
                 {
                     id = Convert.ToInt32(cmd.ExecuteScalar());
@@ -148,6 +148,7 @@ namespace Indihiang.Data
 
             return id;
         }
+
         public List<Indihiang.DomainObject.LogData> GetLogDataByFilter(string filter)
         {
             SQLiteConnection con = null;
@@ -158,7 +159,7 @@ namespace Indihiang.Data
                 con = new SQLiteConnection(GetConnectionStrng());
                 con.Open();
 
-                string query = string.Format("select id,logdate,logtime from logdata where {0}",filter);
+                string query = $"select id,logdate,logtime from logdata where {filter}";
                 SQLiteCommand cmd = new SQLiteCommand(query, con);
                 rd = cmd.ExecuteReader();
                 while (rd.Read())
@@ -171,7 +172,7 @@ namespace Indihiang.Data
                     if (!rd.IsDBNull(rd.GetOrdinal("logdate")))
                         obj.LogDate = (string)rd["logdate"];
                     if (!rd.IsDBNull(rd.GetOrdinal("logtime")))
-                        obj.LogTime = (string)rd["logtime"];                   
+                        obj.LogTime = (string)rd["logtime"];
 
                     list.Add(obj);
 
@@ -192,7 +193,6 @@ namespace Indihiang.Data
 
             return list;
         }
-
         #endregion
 
         #region LogItem
@@ -246,6 +246,7 @@ namespace Indihiang.Data
                     con.Close();
             }
         }
+
         public List<Indihiang.DomainObject.LogItem> GetLogItemByFilter(string filter)
         {
             SQLiteConnection con = null;
@@ -290,10 +291,7 @@ namespace Indihiang.Data
 
             return list;
         }
-
-
         #endregion
-
 
         #region DumpData
         public bool InsertBulkDumpData(List<Indihiang.DomainObject.DumpData> dump)
@@ -310,10 +308,10 @@ namespace Indihiang.Data
                 using (SQLiteCommand cmd = con.CreateCommand())
                 {
                     StringBuilder builder = new StringBuilder();
-                    builder.Append("insert into [log_data](fullfilename,a_day,a_month,server_ip,");
+                    builder.Append("insert into [log_data](fullfilename,a_day,a_month,a_date,server_ip,");
                     builder.Append("server_port,client_ip,page_access,query_page_access,access_username,");
                     builder.Append("user_agent,protocol_status,bytes_sent,bytes_received,referer,ip_country,time_taken,referer_class)");
-                    builder.Append(" values(@par1,@par2,@par3,@par4,@par5,@par6,@par7,@par8,@par9,@par10,@par11,@par12,@par13,@par14,@par15,@par16,@par17)");
+                    builder.Append(" values(@par1,@par2,@par3,@par4,@par5,@par6,@par7,@par8,@par9,@par10,@par11,@par12,@par13,@par14,@par15,@par16,@par17,@par18)");
 
                     cmd.CommandText = builder.ToString();
 
@@ -334,26 +332,28 @@ namespace Indihiang.Data
                     SQLiteParameter par15 = cmd.Parameters.Add("@par15", DbType.String);
                     SQLiteParameter par16 = cmd.Parameters.Add("@par16", DbType.String);
                     SQLiteParameter par17 = cmd.Parameters.Add("@par17", DbType.String);
+                    SQLiteParameter par18 = cmd.Parameters.Add("@par18", DbType.String);
 
                     for (int i = 0; i < dump.Count; i++)
-                    {                       
-                        par1.Value = dump[i].FullFileName;                        
+                    {
+                        par1.Value = dump[i].FullFileName;
                         par2.Value = dump[i].Day;
                         par3.Value = dump[i].Month;
-                        par4.Value = IndihiangHelper.GetStringLogItem(dump[i].Server_IP);
-                        par5.Value = IndihiangHelper.GetStringLogItem(dump[i].Server_Port);
-                        par6.Value = IndihiangHelper.GetStringLogItem(dump[i].Client_IP);
-                        par7.Value = IndihiangHelper.GetStringLogItem(dump[i].Page_Access);
-                        par8.Value = IndihiangHelper.GetStringLogItem(dump[i].Query_Page_Access);
-                        par9.Value = IndihiangHelper.GetStringLogItem(dump[i].Access_Username);
-                        par10.Value = IndihiangHelper.GetStringLogItem(dump[i].User_Agent);
-                        par11.Value = IndihiangHelper.GetStringLogItem(dump[i].Protocol_Status);
-                        par12.Value = dump[i].Bytes_Sent;
-                        par13.Value = dump[i].Bytes_Received;
-                        par14.Value = IndihiangHelper.GetStringLogItem(dump[i].Referer);
-                        par15.Value = IndihiangHelper.GetStringLogItem(dump[i].IPClientCountry);
-                        par16.Value = dump[i].TimeTaken;
-                        par17.Value = IndihiangHelper.GetStringLogItem(dump[i].RefererClass);
+                        par4.Value = $"{dump[i].Year:D4}-{dump[i].Month:D2}-{dump[i].Day:D2}";
+                        par5.Value = IndihiangHelper.GetStringLogItem(dump[i].Server_IP);
+                        par6.Value = IndihiangHelper.GetStringLogItem(dump[i].Server_Port);
+                        par7.Value = IndihiangHelper.GetStringLogItem(dump[i].Client_IP);
+                        par8.Value = IndihiangHelper.GetStringLogItem(dump[i].Page_Access);
+                        par9.Value = IndihiangHelper.GetStringLogItem(dump[i].Query_Page_Access);
+                        par10.Value = IndihiangHelper.GetStringLogItem(dump[i].Access_Username);
+                        par11.Value = IndihiangHelper.GetStringLogItem(dump[i].User_Agent);
+                        par12.Value = IndihiangHelper.GetStringLogItem(dump[i].Protocol_Status);
+                        par13.Value = dump[i].Bytes_Sent;
+                        par14.Value = dump[i].Bytes_Received;
+                        par15.Value = IndihiangHelper.GetStringLogItem(dump[i].Referer);
+                        par16.Value = IndihiangHelper.GetStringLogItem(dump[i].IPClientCountry);
+                        par17.Value = dump[i].TimeTaken;
+                        par18.Value = IndihiangHelper.GetStringLogItem(dump[i].RefererClass);
 
                         cmd.ExecuteNonQuery();
                     }
@@ -376,12 +376,10 @@ namespace Indihiang.Data
             }
 
             return success;
-        }                
-
+        }
         #endregion
 
         #region IP Country
-
         public string GetCountryName(double ipDouble)
         {
             SQLiteConnection con = null;
@@ -391,7 +389,7 @@ namespace Indihiang.Data
                 con = new SQLiteConnection(GetConnectionStrng());
                 con.Open();
 
-                string query = string.Format("SELECT country_name FROM ip_country WHERE ({0} BETWEEN ip_start AND ip_end)", ipDouble);
+                string query = $"SELECT country_name FROM ip_country WHERE ({ipDouble} BETWEEN ip_start AND ip_end)";
                 SQLiteCommand cmd = new SQLiteCommand(query, con);
                 object obj = cmd.ExecuteScalar();
 
@@ -414,10 +412,10 @@ namespace Indihiang.Data
 
         public List<Indihiang.DomainObject.IPCountry> GetAllIpCountry()
         {
-			List<Indihiang.DomainObject.IPCountry> list = new List<Indihiang.DomainObject.IPCountry>();
+            List<Indihiang.DomainObject.IPCountry> list = new List<Indihiang.DomainObject.IPCountry>();
 
-			if (Indihiang.Properties.Settings.Default.FindCountries == false)
-				return list;
+            if (Indihiang.Properties.Settings.Default.FindCountries == false)
+                return list;
 
             SQLiteConnection con = null;
             SQLiteDataReader rd = null;
@@ -442,18 +440,15 @@ namespace Indihiang.Data
                         obj.IpEnd = 0;
                     if (!rd.IsDBNull(rd.GetOrdinal("country_name")))
                         obj.CoutryName = (string)rd["country_name"];
-                   
 
                     list.Add(obj);
-
                 }
-
             }
             catch (Exception err)
             {
                 System.Diagnostics.Debug.WriteLine(err.StackTrace);
 
-				System.Windows.Forms.MessageBox.Show("There was an error reading the country IP ranges.\n\nHave you installed the \'ipcountry.db\' database into (User Profile Application Data)\\Indihiang\\Media?\n\nException: " + err.Message, "Exception", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                System.Windows.Forms.MessageBox.Show("There was an error reading the country IP ranges.\n\nHave you installed the \'ipcountry.db\' database into (User Profile Application Data)\\Indihiang\\Media?\n\nException: " + err.Message, "Exception", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
             }
             finally
             {
@@ -465,8 +460,6 @@ namespace Indihiang.Data
 
             return list;
         }
-
         #endregion
-
     }
 }

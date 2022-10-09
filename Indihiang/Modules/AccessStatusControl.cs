@@ -19,8 +19,8 @@ namespace Indihiang.Modules
         private string _fileName;
         private long _totalData;
         private List<DumpData> _listTopOf3 = new List<DumpData>();
-        private List<DumpData> _listStatus = new List<DumpData>();        
-        private List<string> _listYears = new List<string>();  
+        private List<DumpData> _listStatus = new List<DumpData>();
+        private List<string> _listYears = new List<string>();
 
         public AccessStatusControl()
         {
@@ -54,6 +54,7 @@ namespace Indihiang.Modules
                 _fileName = value;
             }
         }
+
         public List<string> ListOfYear
         {
             set
@@ -71,13 +72,12 @@ namespace Indihiang.Modules
             cboParams1.Items.AddRange(_listYears.ToArray());
             cboParams2.Items.AddRange(_listYears.ToArray());
 
-            SetGridLayout();            
+            SetGridLayout();
             SetSize();
 
             RenderInfoEventArgs info = new RenderInfoEventArgs(_guid, LogFeature.STATUS, _fileName);
             _synContext.Post(OnRenderHandler, info);
         }
-
         #endregion
 
         protected virtual void OnRenderHandler(RenderInfoEventArgs e)
@@ -98,8 +98,8 @@ namespace Indihiang.Modules
 
             dataGridHttpStatus.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridHttpStatus.MultiSelect = false;
-
         }
+
         private void GenerateGraph()
         {
             GraphPane pane = this.zedPercentStatus1.GraphPane;
@@ -112,7 +112,7 @@ namespace Indihiang.Modules
 
             if (_listTopOf3.Count > 0)
             {
-                Color[] colors = new Color[] { Color.Red, Color.Blue, Color.Green,Color.Purple };
+                Color[] colors = new Color[] { Color.Red, Color.Blue, Color.Green, Color.Purple };
 
                 double total = _totalData;
                 long itemTotal = 0;
@@ -134,7 +134,7 @@ namespace Indihiang.Modules
                             Color.White, 45f, 0.2,
                             "Others (" +
                             string.Format("{0:0.##}", (double)(remains * 100 / total)) + " %)");
-                } 
+                }
             }
 
             zedPercentStatus1.IsShowPointValues = true;
@@ -142,7 +142,7 @@ namespace Indihiang.Modules
             SetSize();
         }
         private void GenerateGrid()
-        {           
+        {
             dataGridHttpStatus.Rows.Clear();
             if (_listStatus.Count > 0)
             {
@@ -162,6 +162,7 @@ namespace Indihiang.Modules
             zedPercentStatus1.Location = new Point(10, 10);
             zedPercentStatus1.Size = new Size(ClientRectangle.Width - 20, ClientRectangle.Height - 20);
         }
+
         private void AccessStatusControl_Resize(object sender, EventArgs e)
         {
             SetSize();
@@ -172,7 +173,7 @@ namespace Indihiang.Modules
             try
             {
                 string par = e.Argument.ToString();
-                LogDataFacade facade = new LogDataFacade(_guid);              
+                LogDataFacade facade = new LogDataFacade(_guid);
 
                 _listTopOf3 = new List<DumpData>(facade.GetHttpStatusAccessByYear(Convert.ToInt32(par), 3));
                 _totalData = facade.GetTotalData(Convert.ToInt32(par));
@@ -228,7 +229,7 @@ namespace Indihiang.Modules
                 return;
             }
             btnGenerate1.Text = "Generating...";
-            btnGenerate1.Enabled = false;            
+            btnGenerate1.Enabled = false;
             backgroundWorker1.RunWorkerAsync(cboParams1.SelectedItem);
         }
 
@@ -243,6 +244,5 @@ namespace Indihiang.Modules
             btnGenerate2.Enabled = false;
             backgroundWorker2.RunWorkerAsync(cboParams2.SelectedItem);
         }
-
     }
 }

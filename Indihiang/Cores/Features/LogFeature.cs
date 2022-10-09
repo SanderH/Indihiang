@@ -6,13 +6,15 @@ namespace Indihiang.Cores.Features
     {
         GENERAL,
         HITS,
-        USERAGENT,        
+        USERAGENT,
         STATUS,
         ACCESS,
         IPADDRESS,
         METHODS,
         BANDWIDTH,
         REQUEST,
-        REFERER
+        REFERER,
+        ACCESS_USERNAME,
+        FILTER
     }
 }

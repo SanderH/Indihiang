@@ -7,8 +7,8 @@ namespace Indihiang.Cores
     {
 
         public W3cExtendedLogParser(string logFile, EnumLogFile logFileFormat)
-            : base(logFile, logFileFormat) 
-        { 
+            : base(logFile, logFileFormat)
+        {
         }
 
         protected override List<string> ParseHeader(string line)
@@ -34,7 +34,6 @@ namespace Indihiang.Cores
 
             return list;
         }
-
 
         protected override bool IsLogHeader(string line)
         {

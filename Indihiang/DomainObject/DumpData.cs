@@ -1,6 +1,5 @@
 using System;
 
-
 namespace Indihiang.DomainObject
 {
     public class DumpData
@@ -23,7 +22,7 @@ namespace Indihiang.DomainObject
         private string _referer;
         private string _country;
         private string _referer_class;
-        private long _time_taken;        
+        private long _time_taken;
         private long _total;
 
         public int Id
@@ -39,6 +38,7 @@ namespace Indihiang.DomainObject
                 _id = value;
             }
         }
+
         public string FullFileName
         {
             get
@@ -52,6 +52,7 @@ namespace Indihiang.DomainObject
                 _fullFileName = value;
             }
         }
+
         public int Day
         {
             get
@@ -65,6 +66,7 @@ namespace Indihiang.DomainObject
                 _a_day = value;
             }
         }
+
         public int Month
         {
             get
@@ -78,6 +80,7 @@ namespace Indihiang.DomainObject
                 _a_month = value;
             }
         }
+
         public int Year
         {
             get
@@ -91,6 +94,7 @@ namespace Indihiang.DomainObject
                 _a_year = value;
             }
         }
+
         public string Server_IP
         {
             get
@@ -104,6 +108,7 @@ namespace Indihiang.DomainObject
                 _server_ip = value;
             }
         }
+
         public string Server_Port
         {
             get
@@ -117,6 +122,7 @@ namespace Indihiang.DomainObject
                 _server_port = value;
             }
         }
+
         public string Client_IP
         {
             get
@@ -130,6 +136,7 @@ namespace Indihiang.DomainObject
                 _client_ip = value;
             }
         }
+
         public string Page_Access
         {
             get
@@ -143,6 +150,7 @@ namespace Indihiang.DomainObject
                 _page_access = value;
             }
         }
+
         public string Query_Page_Access
         {
             get
@@ -156,6 +164,7 @@ namespace Indihiang.DomainObject
                 _query_page_access = value;
             }
         }
+
         public string Access_Username
         {
             get
@@ -169,6 +178,7 @@ namespace Indihiang.DomainObject
                 _access_username = value;
             }
         }
+
         public string User_Agent
         {
             get
@@ -182,6 +192,7 @@ namespace Indihiang.DomainObject
                 _user_agent = value;
             }
         }
+
         public string Protocol_Status
         {
             get
@@ -195,6 +206,7 @@ namespace Indihiang.DomainObject
                 _protocol_status = value;
             }
         }
+
         public long Bytes_Sent
         {
             get
@@ -208,6 +220,7 @@ namespace Indihiang.DomainObject
                 _bytes_sent = value;
             }
         }
+
         public long Bytes_Received
         {
             get
@@ -221,6 +234,7 @@ namespace Indihiang.DomainObject
                 _bytes_received = value;
             }
         }
+
         public string Referer
         {
             get
@@ -234,6 +248,7 @@ namespace Indihiang.DomainObject
                 _referer = value;
             }
         }
+
         public string IPClientCountry
         {
             get
@@ -247,6 +262,7 @@ namespace Indihiang.DomainObject
                 _country = value;
             }
         }
+
         public string RefererClass
         {
             get
@@ -260,6 +276,7 @@ namespace Indihiang.DomainObject
                 _referer_class = value;
             }
         }
+
         public long TimeTaken
         {
             get
@@ -273,6 +290,7 @@ namespace Indihiang.DomainObject
                 _time_taken = value;
             }
         }
+
         public long Total
         {
             get
@@ -287,7 +305,7 @@ namespace Indihiang.DomainObject
             }
         }
 
-        public DumpData() 
+        public DumpData()
         {
             _a_day = -1;
             _a_month = -1;
@@ -310,6 +328,5 @@ namespace Indihiang.DomainObject
             _time_taken = 0;
             _total = 0;
         }
-       
     }
 }

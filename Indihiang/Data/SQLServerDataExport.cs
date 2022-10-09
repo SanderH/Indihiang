@@ -11,12 +11,12 @@ namespace Indihiang.Data
 {
     public class SQLServerDataExport : IndihiangDataExport
     {
-        public SQLServerDataExport():base(){ }
+        public SQLServerDataExport() : base() { }
 
         protected override bool CreateDatabase()
         {
-            string database = string.Format("create database {0};",_db);
-            string conString1 = string.Format("server={0};uid={1};pwd={2}",_svr,_uid,_pwd);
+            string database = string.Format("create database {0};", _db);
+            string conString1 = string.Format("server={0};uid={1};pwd={2}", _svr, _uid, _pwd);
             string conString2 = string.Format("server={0};database={1};uid={2};pwd={3}", _svr, _db, _uid, _pwd);
 
             string create_tb = @"                    
@@ -43,7 +43,6 @@ namespace Indihiang.Data
                     )
             ";
 
-
             try
             {
                 SqlConnection con = new SqlConnection(conString1);
@@ -69,7 +68,6 @@ namespace Indihiang.Data
             {
                 _errMessage = err.Message;
             }
-
 
             return false;
         }
@@ -191,6 +189,5 @@ namespace Indihiang.Data
 
             return success;
         }
-
     }
 }

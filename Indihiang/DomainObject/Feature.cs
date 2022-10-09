@@ -22,6 +22,7 @@ namespace Indihiang.DomainObject
                 _id = value;
             }
         }
+
         public string Name
         {
             get
@@ -35,6 +36,7 @@ namespace Indihiang.DomainObject
                 _name = value;
             }
         }
+
         public string Field
         {
             get
@@ -48,7 +50,6 @@ namespace Indihiang.DomainObject
                 _field = value;
             }
         }
-
         public Feature() { }
     }
 }

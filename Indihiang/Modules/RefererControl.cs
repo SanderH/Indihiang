@@ -15,7 +15,7 @@ using Indihiang.DomainObject;
 using ZedGraph;
 namespace Indihiang.Modules
 {
-    public partial class RefererControl : UserControl,BaseControl
+    public partial class RefererControl : UserControl, BaseControl
     {
         private SynchronizationContext _synContext;
         private string _guid;
@@ -31,7 +31,6 @@ namespace Indihiang.Modules
         }
 
         #region BaseControl Members
-
         public event EventHandler<RenderInfoEventArgs> RenderHandler;
 
         public string FeatureGuid
@@ -101,8 +100,8 @@ namespace Indihiang.Modules
 
             dataGridViewReferer.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewReferer.MultiSelect = false;
-
         }
+
         private void SetSize()
         {
             zedReferer.Location = new Point(10, 10);
@@ -124,7 +123,7 @@ namespace Indihiang.Modules
                 Color[] colors = new Color[] { Color.Orange, Color.Blue, Color.Green, Color.Gray };
 
                 double totalData = 0;
-                long class1=0, class2=0, class3=0, class4 =0;
+                long class1 = 0, class2 = 0, class3 = 0, class4 = 0;
                 for (int i = 0; i < _listReferer1.Count; i++)
                 {
                     totalData = totalData + _listReferer1[i].Total;
@@ -160,7 +159,6 @@ namespace Indihiang.Modules
                             Color.White, 45f, 0.2,
                             "Unknown/No Data (" +
                             string.Format("{0:0.##}", (double)(class4 * 100 / totalData)) + " %)");
-               
             }
 
             zedReferer.IsShowPointValues = true;
@@ -229,8 +227,8 @@ namespace Indihiang.Modules
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (_listReferer1!=null)
-                GenerateGraph();    
+            if (_listReferer1 != null)
+                GenerateGraph();
 
             btnGenerate1.Text = "Generate";
             btnGenerate1.Enabled = true;
@@ -262,8 +260,5 @@ namespace Indihiang.Modules
             btnGenerate2.Text = "Generate";
             btnGenerate2.Enabled = true;
         }
-
-
-
     }
 }

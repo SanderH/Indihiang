@@ -28,6 +28,7 @@ namespace Indihiang.Modules
             InitializeComponent();
             _synContext = AsyncOperationManager.SynchronizationContext;
         }
+
         #region BaseControl Members
         public event EventHandler<RenderInfoEventArgs> RenderHandler;
 
@@ -67,9 +68,10 @@ namespace Indihiang.Modules
         }
         public void Populate()
         {
-            backgroundJob.RunWorkerAsync();            
+            backgroundJob.RunWorkerAsync();
         }
         #endregion
+
         protected virtual void OnRenderHandler(RenderInfoEventArgs e)
         {
             if (RenderHandler != null)
@@ -97,7 +99,7 @@ namespace Indihiang.Modules
             GraphPane pane = zedAccessPage1.GraphPane;
             pane.Title.Text = "The 5 Top of Total Access Page Graph";
             pane.CurveList.Clear();
-            
+
             pane.Legend.Position = LegendPos.InsideTopLeft;
             pane.Chart.Fill = new Fill(Color.White, Color.Orange, 90F);
             pane.Fill = new Fill(Color.FromArgb(250, 250, 255));
@@ -106,10 +108,10 @@ namespace Indihiang.Modules
             {
                 double total = _totalAccessYear;
                 double itemTotal = 0;
-                for (int i = 0; i < _listTopOf5.Count;i++ )
+                for (int i = 0; i < _listTopOf5.Count; i++)
                 {
                     itemTotal = itemTotal + _listTopOf5[i].Total;
-                    switch(i)
+                    switch (i)
                     {
                         case 0:
                             pane.AddPieSlice(_listTopOf5[i].Total,
@@ -132,7 +134,7 @@ namespace Indihiang.Modules
                             _listTopOf5[i].Page_Access + " (" +
                             string.Format("{0:0.##}", (double)(_listTopOf5[i].Total * 100 / total)) + " %)");
                             break;
-                        case 3: 
+                        case 3:
                             pane.AddPieSlice(_listTopOf5[i].Total,
                             Color.Cyan,
                             Color.White, 45f, 0.2,
@@ -144,11 +146,11 @@ namespace Indihiang.Modules
                             Color.Purple,
                             Color.White, 45f, 0.2,
                             _listTopOf5[i].Page_Access + " (" +
-                            string.Format("{0:0.##}", (double)(_listTopOf5[i].Total * 100 / total)) + " %)");                            
+                            string.Format("{0:0.##}", (double)(_listTopOf5[i].Total * 100 / total)) + " %)");
                             break;
 
                     }
-                    
+
                 }
                 double remains = total - itemTotal;
                 if (remains > 0)
@@ -159,13 +161,12 @@ namespace Indihiang.Modules
                             "Others (" +
                             string.Format("{0:0.##}", (double)(remains * 100 / total)) + " %)");
                 }
-
             }
 
             zedAccessPage1.IsShowPointValues = true;
             zedAccessPage1.AxisChange();
-
         }
+
         private void GenerateGrid()
         {
             dataGridAccess.Rows.Clear();
@@ -198,7 +199,7 @@ namespace Indihiang.Modules
         {
             try
             {
-                LogDataFacade facade = new LogDataFacade(_guid);                                
+                LogDataFacade facade = new LogDataFacade(_guid);
 
                 for (int i = 0; i < _listYears.Count; i++)
                 {
@@ -266,10 +267,10 @@ namespace Indihiang.Modules
                 string par = e.Argument.ToString();
                 string[] items = par.Split(new char[] { '-' });
                 int month = IndihiangHelper.GetMonth(items[0]);
-                int year = Convert.ToInt32(items[1]); 
+                int year = Convert.ToInt32(items[1]);
 
                 LogDataFacade facade = new LogDataFacade(_guid);
-                _listAccessPage = new List<DumpData>(facade.GetAccessPageByYearMonth(year,month));
+                _listAccessPage = new List<DumpData>(facade.GetAccessPageByYearMonth(year, month));
             }
             catch (Exception err)
             {
@@ -311,7 +312,5 @@ namespace Indihiang.Modules
             btnGenerate2.Enabled = false;
             backgroundJobGrid.RunWorkerAsync(cboParams2.SelectedItem);
         }
-
-
     }
 }

@@ -20,6 +20,7 @@ namespace Indihiang.DomainObject
                 _id = value;
             }
         }
+
         public string SourceData
         {
             get
@@ -35,7 +36,5 @@ namespace Indihiang.DomainObject
         }
 
         public LogSource() { }
-
-
     }
 }

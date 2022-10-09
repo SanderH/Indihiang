@@ -27,6 +27,7 @@ namespace Indihiang.DomainObject
                 _id = value;
             }
         }
+
         public string ServerComment
         {
             get
@@ -40,6 +41,7 @@ namespace Indihiang.DomainObject
                 _serverComment = value;
             }
         }
+
         public string LogPath
         {
             get
@@ -53,6 +55,7 @@ namespace Indihiang.DomainObject
                 _logPath = value;
             }
         }
+
         public string ServerPort
         {
             get
@@ -66,6 +69,7 @@ namespace Indihiang.DomainObject
                 _serverPort = value;
             }
         }
+
         public string RemoteServer
         {
             get
@@ -93,6 +97,7 @@ namespace Indihiang.DomainObject
                 _iisUserId = value;
             }
         }
+
         public string IISPassword
         {
             get
@@ -106,6 +111,7 @@ namespace Indihiang.DomainObject
                 _iisPassword = value;
             }
         }
+
         public bool LocalComputer
         {
             get
@@ -124,15 +130,14 @@ namespace Indihiang.DomainObject
         {
             get
             {
-                if(_localComputer)
-                    return string.Format("{0} (http://localhost:{1})", _serverComment,_serverPort);
+                if (_localComputer)
+                    return string.Format("{0} (http://localhost:{1})", _serverComment, _serverPort);
 
-                return string.Format("{0} (http://{1}:{2})", _serverComment, _remoteServer,_serverPort);
+                return string.Format("{0} (http://{1}:{2})", _serverComment, _remoteServer, _serverPort);
             }
         }
 
-
-        public IISInfo() 
+        public IISInfo()
         {
         }
     }

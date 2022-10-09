@@ -26,7 +26,6 @@ namespace Indihiang.Data
         }
         protected IndihiangDataExport() { }
 
-
         public static IndihiangDataExport Create(DataExportDestination mode)
         {
             if (mode == DataExportDestination.SQLServer)
@@ -35,9 +34,9 @@ namespace Indihiang.Data
             //    return new OracleDataExport();
 
             return null;
-        }       
+        }
 
-        public bool Export(string databaseFile,string server,string database,string uid,string pwd)
+        public bool Export(string databaseFile, string server, string database, string uid, string pwd)
         {
             _databaseFile = databaseFile;
             _svr = server;
@@ -54,8 +53,8 @@ namespace Indihiang.Data
             return true;
         }
 
-
         protected abstract bool CreateDatabase();
+
         protected abstract bool ExportData();
     }
 }

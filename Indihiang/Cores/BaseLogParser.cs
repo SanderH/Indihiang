@@ -12,14 +12,12 @@ namespace Indihiang.Cores
 {
     public abstract class BaseLogParser
     {
-
         private SynchronizationContext _synContext;
         private ConcurrentQueue<List<Indihiang.DomainObject.DumpData>> _dumpLogQueue;
-        private Thread _dataQueue;
+        private readonly Thread _dataQueue;
         private bool _finish;
         private bool _allDone;
         private ManualResetEventSlim _exitDump;
-
 
         public event EventHandler<LogInfoEventArgs> ParseLogHandler;
 
@@ -78,7 +76,7 @@ namespace Indihiang.Cores
                 listFiles.Add(LogFile.ToLower().Trim());
             }
 
-            success = SequentialParse(success, listFiles);//ParallelParse(success, listFiles);
+            success = /*SequentialParse(success, listFiles);//*/ParallelParse(success, listFiles);
 
             _finish = true;
             Thread.Sleep(100);
@@ -131,11 +129,7 @@ namespace Indihiang.Cores
                         _synContext.Post(OnParseLog, logInfo);
                     }
                     obj.Set();
-
-
-
                 });
-
 
                 try
                 {
@@ -173,7 +167,6 @@ namespace Indihiang.Cores
 
                 Thread.Sleep(100);
                 success = true;
-
             }
             catch (AggregateException err)
             {
@@ -209,9 +202,7 @@ namespace Indihiang.Cores
                        "Parse()",
                        String.Format("Internal Exception Error: {0}", err.InnerException.Message));
                 _synContext.Post(OnParseLog, logInfo);
-
                 #endregion
-
             }
             catch (Exception err)
             {
@@ -240,9 +231,7 @@ namespace Indihiang.Cores
                        "Parse()",
                        String.Format("Detail Internal Error: {0}", err.StackTrace));
                 _synContext.Post(OnParseLog, logInfo);
-
                 #endregion
-
             }
             return success;
         }
@@ -295,7 +284,6 @@ namespace Indihiang.Cores
                     }
                 }
 
-
                 _finish = true;
 
                 //LogInfoEventArgs logInfo2 = new LogInfoEventArgs(
@@ -324,7 +312,6 @@ namespace Indihiang.Cores
 
                 Thread.Sleep(100);
                 success = true;
-
             }
             catch (AggregateException err)
             {
@@ -360,9 +347,7 @@ namespace Indihiang.Cores
                        "Parse()",
                        String.Format("Internal Exception Error: {0}", err.InnerException.Message));
                 _synContext.Post(OnParseLog, logInfo);
-
                 #endregion
-
             }
             catch (Exception err)
             {
@@ -391,9 +376,7 @@ namespace Indihiang.Cores
                        "Parse()",
                        String.Format("Detail Internal Error: {0}", err.StackTrace));
                 _synContext.Post(OnParseLog, logInfo);
-
                 #endregion
-
             }
             return success;
         }
@@ -410,10 +393,11 @@ namespace Indihiang.Cores
                         if (_dataQueue.IsAlive)
                             _dataQueue.Abort();
                     }
-                    catch{ }
+                    catch { }
                 }
             }
         }
+
         private void DumpData()
         {
             List<Indihiang.DomainObject.DumpData> listDump;
@@ -429,8 +413,8 @@ namespace Indihiang.Cores
                 {
                     if (_dumpLogQueue.TryDequeue(out listDump))
                     {
-						if (Indihiang.Properties.Settings.Default.FindCountries)
-						{
+                        if (Indihiang.Properties.Settings.Default.FindCountries)
+                        {
                             for (int j = 0; j < listDump.Count; j++)
                             {
                                 if (!string.IsNullOrEmpty(listDump[j].Client_IP))
@@ -459,7 +443,7 @@ namespace Indihiang.Cores
                                     }
                                 }
                             }
-						}
+                        }
 
                         Debug.WriteLine("PerformDump..");
                         PerformDump(listDump);
@@ -468,7 +452,7 @@ namespace Indihiang.Cores
                     else
                         Thread.Sleep(10);
                 }
-                catch(Exception err)
+                catch (Exception err)
                 {
                     Logger.Write(err.Message);
                     Logger.Write(err.StackTrace);
@@ -484,8 +468,8 @@ namespace Indihiang.Cores
                 {
                     Debug.WriteLine(string.Format("Dump data: {0}:{1}", i + 1, _dumpLogQueue.Count));
 
-					if (Indihiang.Properties.Settings.Default.FindCountries)
-					{
+                    if (Indihiang.Properties.Settings.Default.FindCountries)
+                    {
                         for (int j = 0; j < list[i].Count; j++)
                         {
                             if (!string.IsNullOrEmpty(list[i][j].Client_IP))
@@ -513,9 +497,8 @@ namespace Indihiang.Cores
                                     list[i][j] = obj;
                                 }
                             }
-
                         }
-					}
+                    }
                     PerformDump(list[i]);
                     list[i].Clear();
                 }
@@ -563,7 +546,6 @@ namespace Indihiang.Cores
                                 list[i][j] = obj;
                             }
                         }
-
                     }
                     PerformDump(list[i]);
                     list[i].Clear();
@@ -572,13 +554,11 @@ namespace Indihiang.Cores
             cacheIpCountry.Clear();
             listIpCountry.Clear();
             _allDone = true;
-
-
         }
 
         private void PerformDump(List<Indihiang.DomainObject.DumpData> listDump)
         {
-            if (listDump.Count>0)
+            if (listDump.Count > 0)
             {
                 string file = string.Empty;
                 DataHelper helper = null;
@@ -600,149 +580,147 @@ namespace Indihiang.Cores
         protected void RunParse(string logFile)
         {
             List<Indihiang.DomainObject.DumpData> listDump = new List<Indihiang.DomainObject.DumpData>();
-			bool bRead = false;
-			DateTime dt = DateTime.Now;
-			string strError = "(unknown)";
-retry:
-			if (((DateTime.Now - dt).TotalSeconds > 5) && (System.Windows.Forms.MessageBox.Show("Timed out trying to open log file:\n\n" + logFile + "\n\nError: " + strError + "\n\nTry again?", "Time out", System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Warning, System.Windows.Forms.MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes))
-				return;
-			try
-			{
-				using (StreamReader sr = new StreamReader(File.Open(logFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))	// FileShare.Read
-				{
-					bRead = true;
+            bool bRead = false;
+            DateTime dt = DateTime.Now;
+            string strError = "(unknown)";
+        retry:
+            if (((DateTime.Now - dt).TotalSeconds > 5) && (System.Windows.Forms.MessageBox.Show("Timed out trying to open log file:\n\n" + logFile + "\n\nError: " + strError + "\n\nTry again?", "Time out", System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Warning, System.Windows.Forms.MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes))
+                return;
+            try
+            {
+                using (StreamReader sr = new StreamReader(File.Open(logFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) // FileShare.Read
+                {
+                    bRead = true;
 
-					string line = sr.ReadLine();
+                    string line = sr.ReadLine();
 
-					List<string> currentHeader = new List<string>();
-					while (!string.IsNullOrEmpty(line))
-					{
-						if (IsLogHeader(line))
-						{
-							#region Parse Header
-							List<string> list1 = ParseHeader(line);
-							if (list1 != null)
-							{
-								currentHeader = new List<string>(list1);
-							}
-							#endregion
-						}
-						else
-						{
-							line = line.Replace('\0', ' ');
-							#region Parse Data
-							if (!string.IsNullOrEmpty(line))
-							{
-								string[] rows = line.Split(new char[] { ' ' });
-								if (rows != null)
-								{
-									if (rows.Length > 0)
-									{
-										string val = string.Empty;
-										Indihiang.DomainObject.DumpData dump = new Indihiang.DomainObject.DumpData();
-										dump.FullFileName = logFile;
-										for (int i = 0; i < currentHeader.Count; i++)
-										{
-											try
-											{
-												if (currentHeader[i].Equals("date"))
-												{
-													val = rows[i];
-													if (string.IsNullOrEmpty(val))
-														continue;
-													DateTime datetime = DateTime.Parse(val);
-													dump.Day = datetime.Day;
-													dump.Month = datetime.Month;
-													dump.Year = datetime.Year;
-												}
-												if (currentHeader[i].Equals("s-ip"))
-													dump.Server_IP = rows[i];
-												if (currentHeader[i].Equals("s-port"))
-													dump.Server_Port = rows[i];
-												if (currentHeader[i].Equals("cs-uri-stem"))
-													dump.Page_Access = rows[i];
-												if (currentHeader[i].Equals("cs-uri-query"))
-													dump.Query_Page_Access = rows[i];
-												if (currentHeader[i].Equals("cs-username"))
-													dump.Access_Username = rows[i];
-												if (currentHeader[i].Equals("c-ip"))
-													dump.Client_IP = rows[i];
-												if (currentHeader[i].Equals("cs(User-Agent)"))
-													dump.User_Agent = IndihiangHelper.CheckUserAgent(rows[i]);
-												if (currentHeader[i].Equals("sc-status"))
-												{
-													if (dump.Protocol_Status.Contains("."))
-														dump.Protocol_Status = string.Format("{0}{1}", rows[i], dump.Protocol_Status);
-													else
-														dump.Protocol_Status = rows[i];
-												}
-												if (currentHeader[i].Equals("sc-substatus"))
-													dump.Protocol_Status = string.Format("{0}.{1}", dump.Protocol_Status, rows[i]);
+                    List<string> currentHeader = new List<string>();
+                    while (!string.IsNullOrEmpty(line))
+                    {
+                        if (IsLogHeader(line))
+                        {
+                            #region Parse Header
+                            List<string> list1 = ParseHeader(line);
+                            if (list1 != null)
+                            {
+                                currentHeader = new List<string>(list1);
+                            }
+                            #endregion
+                        }
+                        else
+                        {
+                            line = line.Replace('\0', ' ');
+                            #region Parse Data
+                            if (!string.IsNullOrEmpty(line))
+                            {
+                                string[] rows = line.Split(new char[] { ' ' });
+                                if (rows != null)
+                                {
+                                    if (rows.Length > 0)
+                                    {
+                                        string val = string.Empty;
+                                        Indihiang.DomainObject.DumpData dump = new Indihiang.DomainObject.DumpData();
+                                        dump.FullFileName = logFile;
+                                        for (int i = 0; i < currentHeader.Count; i++)
+                                        {
+                                            try
+                                            {
+                                                if (currentHeader[i].Equals("date"))
+                                                {
+                                                    val = rows[i];
+                                                    if (string.IsNullOrEmpty(val))
+                                                        continue;
+                                                    DateTime datetime = DateTime.Parse(val);
+                                                    dump.Day = datetime.Day;
+                                                    dump.Month = datetime.Month;
+                                                    dump.Year = datetime.Year;
+                                                }
+                                                if (currentHeader[i].Equals("s-ip"))
+                                                    dump.Server_IP = rows[i];
+                                                if (currentHeader[i].Equals("s-port"))
+                                                    dump.Server_Port = rows[i];
+                                                if (currentHeader[i].Equals("cs-uri-stem"))
+                                                    dump.Page_Access = rows[i];
+                                                if (currentHeader[i].Equals("cs-uri-query"))
+                                                    dump.Query_Page_Access = rows[i];
+                                                if (currentHeader[i].Equals("cs-username"))
+                                                    dump.Access_Username = rows[i];
+                                                if (currentHeader[i].Equals("c-ip"))
+                                                    dump.Client_IP = rows[i];
+                                                if (currentHeader[i].Equals("cs(User-Agent)"))
+                                                    dump.User_Agent = IndihiangHelper.CheckUserAgent(rows[i]);
+                                                if (currentHeader[i].Equals("sc-status"))
+                                                {
+                                                    if (dump.Protocol_Status.Contains("."))
+                                                        dump.Protocol_Status = string.Format("{0}{1}", rows[i], dump.Protocol_Status);
+                                                    else
+                                                        dump.Protocol_Status = rows[i];
+                                                }
+                                                if (currentHeader[i].Equals("sc-substatus"))
+                                                    dump.Protocol_Status = string.Format("{0}.{1}", dump.Protocol_Status, rows[i]);
 
-												if (currentHeader[i].Equals("cs(Referer)"))
-												{
-													dump.Referer = rows[i];
-													dump.RefererClass = IndihiangHelper.GetRefererClass(rows[i]);
-												}
+                                                if (currentHeader[i].Equals("cs(Referer)"))
+                                                {
+                                                    dump.Referer = rows[i];
+                                                    dump.RefererClass = IndihiangHelper.GetRefererClass(rows[i]);
+                                                }
 
-												if (currentHeader[i].Equals("sc-bytes"))
-												{
-													if (!string.IsNullOrEmpty(rows[i]))
-														dump.Bytes_Sent = Convert.ToInt64(rows[i]);
-													else
-														dump.Bytes_Sent = 0;
-												}
+                                                if (currentHeader[i].Equals("sc-bytes"))
+                                                {
+                                                    if (!string.IsNullOrEmpty(rows[i]))
+                                                        dump.Bytes_Sent = Convert.ToInt64(rows[i]);
+                                                    else
+                                                        dump.Bytes_Sent = 0;
+                                                }
 
-												if (currentHeader[i].Equals("cs-bytes"))
-												{
-													if (!string.IsNullOrEmpty(rows[i]))
-														dump.Bytes_Received = Convert.ToInt64(rows[i]);
-													else
-														dump.Bytes_Received = 0;
-												}
-												if (currentHeader[i].Equals("time-taken"))
-												{
-													if (!string.IsNullOrEmpty(rows[i]))
-														dump.TimeTaken = Convert.ToInt64(rows[i]);
-													else
-														dump.TimeTaken = 0;
-												}
-											}
-											catch (Exception err)
-											{
-												Console.WriteLine(err.Message);
-											}
+                                                if (currentHeader[i].Equals("cs-bytes"))
+                                                {
+                                                    if (!string.IsNullOrEmpty(rows[i]))
+                                                        dump.Bytes_Received = Convert.ToInt64(rows[i]);
+                                                    else
+                                                        dump.Bytes_Received = 0;
+                                                }
+                                                if (currentHeader[i].Equals("time-taken"))
+                                                {
+                                                    if (!string.IsNullOrEmpty(rows[i]))
+                                                        dump.TimeTaken = Convert.ToInt64(rows[i]);
+                                                    else
+                                                        dump.TimeTaken = 0;
+                                                }
+                                            }
+                                            catch (Exception err)
+                                            {
+                                                Console.WriteLine(err.Message);
+                                            }
+                                        }
 
-										}
+                                        if (dump.Day > 0 && dump.Month > 0)
+                                            listDump.Add(dump);
+                                    }
+                                }
+                            }
+                            #endregion
+                        }
 
-										if (dump.Day > 0 && dump.Month > 0)
-											listDump.Add(dump);
-									}
-								}
-							}
-							#endregion
-						}
-
-						line = sr.ReadLine();
-						if (!string.IsNullOrEmpty(line))
-							line = line.Trim();
-					}
-					if (listDump.Count > 0)
-						_dumpLogQueue.Enqueue(listDump);
-
-				}
-			}
-			/*catch (IOException)
+                        line = sr.ReadLine();
+                        if (!string.IsNullOrEmpty(line))
+                            line = line.Trim();
+                    }
+                    if (listDump.Count > 0)
+                        _dumpLogQueue.Enqueue(listDump);
+                }
+            }
+            /*catch (IOException)
 			{
 				//
 			}*/
-			catch (Exception ex)
-			{
-				strError = ex.Message;
-			}
+            catch (Exception ex)
+            {
+                strError = ex.Message;
+            }
 
-			if (bRead == false)
-				goto retry;
+            if (bRead == false)
+                goto retry;
         }
 
         protected abstract bool IsLogHeader(string line);

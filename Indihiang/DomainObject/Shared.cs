@@ -22,6 +22,7 @@ namespace Indihiang.DomainObject
                 _id = value;
             }
         }
+
         public string Name
         {
             get
@@ -35,6 +36,7 @@ namespace Indihiang.DomainObject
                 _name = value;
             }
         }
+
         public string Val
         {
             get

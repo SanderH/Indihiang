@@ -21,6 +21,7 @@ namespace Indihiang.DomainObject
                 _id = value;
             }
         }
+
         public string LogDate
         {
             get
@@ -34,6 +35,7 @@ namespace Indihiang.DomainObject
                 _logDate = value;
             }
         }
+
         public string LogTime
         {
             get
@@ -49,6 +51,5 @@ namespace Indihiang.DomainObject
         }
 
         public LogData() { }
-
     }
 }

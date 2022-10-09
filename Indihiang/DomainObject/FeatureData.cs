@@ -21,6 +21,7 @@ namespace Indihiang.DomainObject
                 _id = value;
             }
         }
+
         public int FeatureId
         {
             get
@@ -34,6 +35,7 @@ namespace Indihiang.DomainObject
                 _featureId = value;
             }
         }
+
         public string Val
         {
             get

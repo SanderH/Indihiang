@@ -20,7 +20,7 @@ namespace Indihiang.Modules
 
         private string _guid;
         private string _fileName;
-        
+
         public List<string> FileNames
         {
             get
@@ -32,7 +32,7 @@ namespace Indihiang.Modules
                 if (_listFiles == value)
                     return;
 
-                _listFiles = value;                
+                _listFiles = value;
             }
         }
 
@@ -68,6 +68,7 @@ namespace Indihiang.Modules
                 _fileName = value;
             }
         }
+
         public void Populate()
         {
             backgroundJob.RunWorkerAsync();
@@ -102,7 +103,6 @@ namespace Indihiang.Modules
 
             RenderInfoEventArgs info = new RenderInfoEventArgs(_guid, LogFeature.GENERAL, _fileName);
             _synContext.Post(OnRenderHandler, info);
-
         }
 
         private void backgroundJob_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
@@ -123,15 +123,11 @@ namespace Indihiang.Modules
 
                 System.Diagnostics.Debug.WriteLine(err.Message);
             }
-
         }
 
         private void backgroundJob_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             ShowData();
         }
-
-
-       
     }
 }

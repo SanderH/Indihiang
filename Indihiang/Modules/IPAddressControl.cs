@@ -16,8 +16,8 @@ namespace Indihiang.Modules
     {
         private SynchronizationContext _synContext;
         private string _guid;
-        private string _fileName;        
-        private List<string> _listYears = new List<string>();        
+        private string _fileName;
+        private List<string> _listYears = new List<string>();
         private List<DumpData> _listTopOf5 = new List<DumpData>();
         private List<DumpData> _listIPAddressYear = new List<DumpData>();
         private List<DumpData> _listIPAddressAccessYear = new List<DumpData>();
@@ -55,6 +55,7 @@ namespace Indihiang.Modules
                 _fileName = value;
             }
         }
+
         public List<string> ListOfYear
         {
             set
@@ -66,6 +67,7 @@ namespace Indihiang.Modules
                 return _listYears;
             }
         }
+
         public void Populate()
         {
             cboParams1.Items.AddRange(_listYears.ToArray());
@@ -112,8 +114,8 @@ namespace Indihiang.Modules
 
             dataGridIPPage.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridIPPage.MultiSelect = false;
-
         }
+
         private void GenerateGraph()
         {
             GraphPane pane = zedIPAccess1.GraphPane;
@@ -126,7 +128,7 @@ namespace Indihiang.Modules
             pane.Fill = new Fill(Color.FromArgb(250, 250, 255));
 
             if (_listTopOf5.Count > 0)
-            {                
+            {
                 Color[] colors = new Color[] { Color.Red, Color.PowderBlue, Color.SeaGreen, Color.Orange, Color.Yellow, Color.Magenta, Color.Gainsboro };
 
                 double total = _totalData;
@@ -149,8 +151,8 @@ namespace Indihiang.Modules
                             Color.White, 45f, 0.2,
                             "Others (" +
                             string.Format("{0:0.##}", (double)(remains * 100 / total)) + " %)");
-                }                
-            }            
+                }
+            }
 
             zedIPAccess1.IsShowPointValues = true;
             zedIPAccess1.AxisChange();
@@ -331,6 +333,5 @@ namespace Indihiang.Modules
             btnGenerate3.Enabled = false;
             backgroundGrid2.RunWorkerAsync(string.Format("{0};{1}", cboParams3.SelectedItem, cmbIPAddress.SelectedItem));
         }
-
     }
 }

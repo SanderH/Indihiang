@@ -6,6 +6,8 @@ using System.IO;
 
 using Indihiang.Cores;
 using Indihiang.DomainObject;
+using System.Text;
+
 namespace Indihiang.Data
 {
     public class LogDataFacade
@@ -23,10 +25,10 @@ namespace Indihiang.Data
         {
             List<string> servers = new List<string>();
             List<string> files = IndihiangHelper.GetIndihiangFileList(_guid);
-            
+
             for (int i = 0; i < files.Count; i++)
             {
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -66,6 +68,7 @@ namespace Indihiang.Data
 
             return servers;
         }
+
         public List<string> GetLogFileList()
         {
             List<string> list = new List<string>();
@@ -73,7 +76,7 @@ namespace Indihiang.Data
 
             for (int i = 0; i < files.Count; i++)
             {
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -103,9 +106,9 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
+
         public long GetTotalData()
         {
             long total = 0;
@@ -113,7 +116,7 @@ namespace Indihiang.Data
 
             for (int i = 0; i < files.Count; i++)
             {
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -130,9 +133,9 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return total;
         }
+
         public long GetTotalData(int year)
         {
             long total = 0;
@@ -146,7 +149,7 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -167,9 +170,9 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return total;
         }
+
         public List<DateTime> GetTimeLogFileList()
         {
             List<DateTime> list = new List<DateTime>();
@@ -179,7 +182,7 @@ namespace Indihiang.Data
             {
                 string fileName = Path.GetFileNameWithoutExtension(files[i]);
                 int year = Convert.ToInt32(fileName.Substring(3));
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -212,9 +215,9 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
+
         public List<string> GetListyearLogFile()
         {
             List<string> years = new List<string>();
@@ -228,9 +231,9 @@ namespace Indihiang.Data
                 if (!years.Contains(year.ToString()))
                     years.Add(year.ToString());
             }
-
             return years;
         }
+
         public List<string> GetMonthLogFileListByYear(string year)
         {
             List<string> list = new List<string>();
@@ -244,7 +247,7 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -274,7 +277,6 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
         #endregion
@@ -287,7 +289,7 @@ namespace Indihiang.Data
 
             for (int i = 0; i < files.Count; i++)
             {
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -320,9 +322,9 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
+
         public List<DumpData> GetTotalPerUserAgentByParams(int year)
         {
             List<DumpData> list = new List<DumpData>();
@@ -336,7 +338,7 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -371,9 +373,9 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
+
         public List<DumpData> GetTotalPerUserAgentByParams(int year, int month)
         {
             List<DumpData> list = new List<DumpData>();
@@ -387,7 +389,7 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -422,7 +424,6 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
         #endregion
@@ -433,6 +434,8 @@ namespace Indihiang.Data
             List<DumpData> list = new List<DumpData>();
             List<string> files = IndihiangHelper.GetIndihiangFileList(_guid);
 
+            string filter = files.Count > 0 ? IndihiangHelper.GetFilter(files[0]) : "";
+
             for (int i = 0; i < files.Count; i++)
             {
                 string fileName = Path.GetFileNameWithoutExtension(files[i]);
@@ -441,11 +444,11 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
-                    string sqlQuery = "select a_month, a_day, COUNT(id) AS total from log_data GROUP BY a_month,a_day";
+                    string sqlQuery = $"select a_month, a_day, COUNT(id) AS total from log_data {filter} GROUP BY a_month,a_day";
                     using (SQLiteCommand cmd = new SQLiteCommand(sqlQuery, conn))
                     {
                         cmd.CommandType = CommandType.Text;
@@ -476,9 +479,9 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
+
         public List<DumpData> GetMonthHitsByParams(int year)
         {
             List<DumpData> list = new List<DumpData>();
@@ -492,7 +495,7 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -523,13 +526,11 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
         #endregion
 
         #region Access
-
         public List<DumpData> GetTop5OfAccessPageByYear(int year)
         {
             List<DumpData> list = new List<DumpData>();
@@ -543,7 +544,7 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -583,9 +584,9 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
+
         public List<DumpData> GetAccessPageByYearMonth(int year, int month)
         {
             List<DumpData> list = new List<DumpData>();
@@ -599,11 +600,11 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
-                    string sqlQuery = string.Format("SELECT page_access,a_day, COUNT(id) AS total FROM log_data WHERE (a_month = {0}) GROUP BY page_access ORDER BY total DESC", month);
+                    string sqlQuery = $"SELECT page_access,a_day, COUNT(id) AS total FROM log_data WHERE (a_month = {month}) GROUP BY page_access ORDER BY total DESC";
                     using (SQLiteCommand cmd = new SQLiteCommand(sqlQuery, conn))
                     {
                         cmd.CommandType = CommandType.Text;
@@ -634,7 +635,6 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
         #endregion
@@ -653,7 +653,7 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -699,9 +699,9 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
+
         public List<string> GetListIPaddressByYear(int year)
         {
             List<string> list = new List<string>();
@@ -715,7 +715,7 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -737,9 +737,9 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
+
         public List<DumpData> GetIPaddressAccessByYear(int year, string clientIp)
         {
             List<DumpData> list = new List<DumpData>();
@@ -753,11 +753,11 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
-                    string sqlQuery = string.Format("SELECT page_access,COUNT(id) AS total FROM log_data WHERE (client_ip = '{0}') GROUP BY page_access ORDER BY total DESC", clientIp);
+                    string sqlQuery = $"SELECT page_access,COUNT(id) AS total FROM log_data WHERE (client_ip = '{clientIp}') GROUP BY page_access ORDER BY total DESC";
                     using (SQLiteCommand cmd = new SQLiteCommand(sqlQuery, conn))
                     {
                         cmd.CommandType = CommandType.Text;
@@ -768,7 +768,7 @@ namespace Indihiang.Data
                             if (!rd.IsDBNull(rd.GetOrdinal("page_access")))
                                 obj.Page_Access = rd["page_access"].ToString();
                             else
-                                obj.Page_Access = "";                            
+                                obj.Page_Access = "";
                             if (!rd.IsDBNull(rd.GetOrdinal("total")))
                                 obj.Total = long.Parse(rd["total"].ToString());
                             else
@@ -783,7 +783,6 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
         #endregion
@@ -802,7 +801,7 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -819,7 +818,7 @@ namespace Indihiang.Data
                                 obj.Protocol_Status = rd["protocol_status"].ToString();
                             else
                                 obj.Protocol_Status = "";
-                            
+
                             if (!rd.IsDBNull(rd.GetOrdinal("total")))
                                 obj.Total = long.Parse(rd["total"].ToString());
                             else
@@ -841,14 +840,11 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
-
         #endregion
 
         #region Bandwidth
-
         public List<long> GetTotalSentReceivedBytesByYear(int year)
         {
             List<long> list = new List<long>();
@@ -862,7 +858,7 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -881,7 +877,7 @@ namespace Indihiang.Data
                             if (!rd.IsDBNull(rd.GetOrdinal("totalreceived")))
                                 list.Add(Convert.ToInt64(rd["totalreceived"]));
                             else
-                                list.Add(0);                           
+                                list.Add(0);
                         }
                         rd.Close();
                     }
@@ -890,9 +886,9 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
+
         public List<DumpData> GetSentReceivedBytesByYear(int year)
         {
             List<DumpData> list = new List<DumpData>();
@@ -906,7 +902,7 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -944,9 +940,9 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
+
         public List<DumpData> GetPageAccessSentReceivedBytesByYear(int year)
         {
             List<DumpData> list = new List<DumpData>();
@@ -960,7 +956,7 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -994,9 +990,9 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
+
         public List<DumpData> GetClientIPSentReceivedBytesByYear(int year)
         {
             List<DumpData> list = new List<DumpData>();
@@ -1010,7 +1006,7 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -1048,13 +1044,11 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
         #endregion
 
         #region Request Processing
-
         public List<DumpData> GetRequestProcessingByYear(int year)
         {
             List<DumpData> list = new List<DumpData>();
@@ -1068,7 +1062,7 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -1115,14 +1109,11 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
-
             return list;
         }
-
         #endregion
 
         #region Referer
-
         public List<DumpData> GetRefererByYear(int year)
         {
             List<DumpData> list = new List<DumpData>();
@@ -1136,7 +1127,7 @@ namespace Indihiang.Data
                 if (currentYear != year)
                     continue;
 
-                string strCon = string.Format("Data Source={0};ReadOnly=true", files[i]);
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
                 using (SQLiteConnection conn = new SQLiteConnection(strCon))
                 {
                     conn.Open();
@@ -1171,12 +1162,212 @@ namespace Indihiang.Data
                     conn.Dispose();
                 }
             }
+            return list;
+        }
+        #endregion
+
+        #region Access Username
+        public List<DumpData> GetAccessUsernamesByParams(int year)
+        {
+            List<DumpData> list = new List<DumpData>();
+            List<string> files = IndihiangHelper.GetIndihiangFileList(_guid);
+
+            for (int i = 0; i < files.Count; i++)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(files[i]);
+                int currentYear = Convert.ToInt32(fileName.Substring(3));
+
+                if (currentYear != year)
+                    continue;
+
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
+                using (SQLiteConnection conn = new SQLiteConnection(strCon))
+                {
+                    conn.Open();
+                    string sqlQuery = "select a_month,a_day,COUNT(distinct access_username) AS total from log_data GROUP BY a_month,a_day";
+                    using (SQLiteCommand cmd = new SQLiteCommand(sqlQuery, conn))
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        SQLiteDataReader rd = cmd.ExecuteReader();
+                        while (rd.Read())
+                        {
+                            DumpData obj = new DumpData();
+                            if (!rd.IsDBNull(rd.GetOrdinal("a_day")))
+                                obj.Day = Convert.ToInt32(rd["a_day"].ToString());
+                            else
+                                obj.Day = 0;
+                            if (!rd.IsDBNull(rd.GetOrdinal("a_month")))
+                                obj.Month = Convert.ToInt32(rd["a_month"].ToString());
+                            else
+                                obj.Month = 0;
+                            if (!rd.IsDBNull(rd.GetOrdinal("total")))
+                                obj.Total = long.Parse(rd["total"].ToString());
+                            else
+                                obj.Total = 0;
+
+
+                            list.Add(obj);
+                        }
+                        rd.Close();
+                    }
+
+                    conn.Close();
+                    conn.Dispose();
+                }
+            }
 
             return list;
         }
 
+        public List<DumpData> GetMonthAccessUsernamesByParams(int year)
+        {
+            List<DumpData> list = new List<DumpData>();
+            List<string> files = IndihiangHelper.GetIndihiangFileList(_guid);
+
+            for (int i = 0; i < files.Count; i++)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(files[i]);
+                int currentYear = Convert.ToInt32(fileName.Substring(3));
+
+                if (currentYear != year)
+                    continue;
+
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
+                using (SQLiteConnection conn = new SQLiteConnection(strCon))
+                {
+                    conn.Open();
+                    string sqlQuery = "select a_month,COUNT(distinct access_username) AS total from log_data GROUP BY a_month";
+                    using (SQLiteCommand cmd = new SQLiteCommand(sqlQuery, conn))
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        SQLiteDataReader rd = cmd.ExecuteReader();
+                        while (rd.Read())
+                        {
+                            DumpData obj = new DumpData();
+                            if (!rd.IsDBNull(rd.GetOrdinal("a_month")))
+                                obj.Month = Convert.ToInt32(rd["a_month"].ToString());
+                            else
+                                obj.Month = 0;
+                            if (!rd.IsDBNull(rd.GetOrdinal("total")))
+                                obj.Total = long.Parse(rd["total"].ToString());
+                            else
+                                obj.Total = 0;
+
+
+                            list.Add(obj);
+                        }
+                        rd.Close();
+                    }
+
+                    conn.Close();
+                    conn.Dispose();
+                }
+            }
+
+            return list;
+        }
+
+        public List<DumpData> GetAccessUsernamesUniqueByParams(int year)
+        {
+            List<DumpData> list = new List<DumpData>();
+            List<string> files = IndihiangHelper.GetIndihiangFileList(_guid);
+
+            for (int i = 0; i < files.Count; i++)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(files[i]);
+                int currentYear = Convert.ToInt32(fileName.Substring(3));
+
+                if (currentYear != year)
+                    continue;
+
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
+                using (SQLiteConnection conn = new SQLiteConnection(strCon))
+                {
+                    conn.Open();
+                    string sqlQuery = "select a_month, a_day, access_username, count(*) AS total from log_data GROUP BY a_month, a_day, access_username";
+                    using (SQLiteCommand cmd = new SQLiteCommand(sqlQuery, conn))
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        SQLiteDataReader rd = cmd.ExecuteReader();
+                        while (rd.Read())
+                        {
+                            DumpData obj = new DumpData();
+                            if (!rd.IsDBNull(rd.GetOrdinal("a_day")))
+                                obj.Day = Convert.ToInt32(rd["a_day"].ToString());
+                            else
+                                obj.Day = 0;
+                            if (!rd.IsDBNull(rd.GetOrdinal("a_month")))
+                                obj.Month = Convert.ToInt32(rd["a_month"].ToString());
+                            else
+                                obj.Month = 0;
+                            if (!rd.IsDBNull(rd.GetOrdinal("total")))
+                                obj.Total = long.Parse(rd["total"].ToString());
+                            else
+                                obj.Total = 0;
+
+
+                            list.Add(obj);
+                        }
+                        rd.Close();
+                    }
+
+                    conn.Close();
+                    conn.Dispose();
+                }
+            }
+            return list;
+        }
+
+        public List<DumpData> GetMonthAccessUsernamesUniqueByParams(int year)
+        {
+            List<DumpData> list = new List<DumpData>();
+            List<string> files = IndihiangHelper.GetIndihiangFileList(_guid);
+
+            for (int i = 0; i < files.Count; i++)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(files[i]);
+                int currentYear = Convert.ToInt32(fileName.Substring(3));
+
+                if (currentYear != year)
+                    continue;
+
+                string strCon = $"Data Source={files[i]};ReadOnly=true";
+                using (SQLiteConnection conn = new SQLiteConnection(strCon))
+                {
+                    conn.Open();
+                    string sqlQuery = "select a_month, access_username, count(*)  AS total from log_data GROUP BY a_month, access_username";
+                    using (SQLiteCommand cmd = new SQLiteCommand(sqlQuery, conn))
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        SQLiteDataReader rd = cmd.ExecuteReader();
+                        while (rd.Read())
+                        {
+                            DumpData obj = new DumpData();
+                            if (!rd.IsDBNull(rd.GetOrdinal("a_month")))
+                                obj.Month = Convert.ToInt32(rd["a_month"].ToString());
+                            else
+                                obj.Month = 0;
+                            if (!rd.IsDBNull(rd.GetOrdinal("access_username")))
+                                obj.Access_Username = rd["access_username"].ToString();
+                            else
+                                obj.Month = 0;
+                            if (!rd.IsDBNull(rd.GetOrdinal("total")))
+                                obj.Total = long.Parse(rd["total"].ToString());
+                            else
+                                obj.Total = 0;
+
+
+                            list.Add(obj);
+                        }
+                        rd.Close();
+                    }
+
+                    conn.Close();
+                    conn.Dispose();
+                }
+            }
+            return list;
+        }
         #endregion
-
-
     }
 }

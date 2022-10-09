@@ -12,7 +12,7 @@ using Indihiang.Cores;
 using ZedGraph;
 namespace Indihiang.Modules
 {
-    public partial class HitsControl : UserControl,BaseControl
+    public partial class HitsControl : UserControl, BaseControl
     {
         private SynchronizationContext _synContext;
         private List<string> _listYears = new List<string>();
@@ -20,7 +20,7 @@ namespace Indihiang.Modules
         private List<DumpData> _listHits2 = new List<DumpData>();
         private List<DumpData> _listHits3 = new List<DumpData>();
         private string _guid;
-        private string _fileName;        
+        private string _fileName;
 
         public HitsControl()
         {
@@ -54,6 +54,7 @@ namespace Indihiang.Modules
                 _fileName = value;
             }
         }
+
         public List<string> ListOfYear
         {
             set
@@ -65,7 +66,6 @@ namespace Indihiang.Modules
                 return _listYears;
             }
         }
-           
 
         public void Populate()
         {
@@ -75,9 +75,10 @@ namespace Indihiang.Modules
 
             RenderInfoEventArgs info = new RenderInfoEventArgs(_guid, LogFeature.HITS, _fileName);
             _synContext.Post(OnRenderHandler, info);
-            
+
         }
         #endregion
+
         protected virtual void OnRenderHandler(RenderInfoEventArgs e)
         {
             if (RenderHandler != null)
@@ -124,9 +125,9 @@ namespace Indihiang.Modules
             pane.XAxis.Scale.Format = "yyyy-MMM-dd";
             pane.YAxis.Title.Text = "Total Hits";
             pane.Chart.Fill = new Fill(Color.White, Color.FromArgb(255, 255, 166), 90F);
-            pane.Fill = new Fill(Color.FromArgb(250, 250, 255));            
+            pane.Fill = new Fill(Color.FromArgb(250, 250, 255));
 
-            if (_listHits1.Count>0)
+            if (_listHits1.Count > 0)
             {
                 double x, y;
                 PointPairList list1 = new PointPairList();
@@ -140,16 +141,16 @@ namespace Indihiang.Modules
                     y = Convert.ToDouble(_listHits1[i].Total);
                     list1.Add(x, y);
                 }
-        
 
-                LineItem line = pane.AddCurve("Hits per Day",list1, Color.Red, SymbolType.Star);
+
+                LineItem line = pane.AddCurve("Hits per Day", list1, Color.Red, SymbolType.Star);
                 line.Line.IsSmooth = true;
             }
 
             zedHits1.IsShowPointValues = true;
             zedHits1.AxisChange();
-
         }
+
         private void GenerateGraphHitsPerMonth()
         {
             GraphPane pane = zedHits2.GraphPane;
@@ -188,7 +189,7 @@ namespace Indihiang.Modules
         private void GenerateGraphHitsGrid()
         {
             string selectedHits = cboHitsData.SelectedItem.ToString();
-            if (_listHits3.Count>0)
+            if (_listHits3.Count > 0)
             {
                 dataGridHits.Rows.Clear();
                 int year = Convert.ToInt32(cboYear3.SelectedItem);
@@ -204,7 +205,7 @@ namespace Indihiang.Modules
 
                         dataGridHits.Rows.Add(data.ToArray());
                     }
-                
+
                 }
                 if (selectedHits == "Hits per Month")
                 {
@@ -225,7 +226,7 @@ namespace Indihiang.Modules
         private void SetSize()
         {
             zedHits1.Location = new Point(10, 10);
-            zedHits1.Size = new Size(ClientRectangle.Width - 20,ClientRectangle.Height - 20);
+            zedHits1.Size = new Size(ClientRectangle.Width - 20, ClientRectangle.Height - 20);
 
             zedHits2.Location = new Point(10, 10);
             zedHits2.Size = new Size(ClientRectangle.Width - 20, ClientRectangle.Height - 20);
@@ -234,14 +235,14 @@ namespace Indihiang.Modules
         private void HitsControl_Resize(object sender, EventArgs e)
         {
             SetSize();
-        }     
+        }
 
         private string zedHits1_PointValueEvent(ZedGraphControl sender, GraphPane pane, CurveItem curve, int iPt)
         {
             PointPair pt = curve[iPt];
             DateTime date = DateTime.FromOADate(pt.X);
 
-            return String.Format("{0}\r\nTime: {1:yyyy-MMM-dd}\r\nHits: {2:f2}", curve.Label.Text,date, pt.Y);
+            return String.Format("{0}\r\nTime: {1:yyyy-MMM-dd}\r\nHits: {2:f2}", curve.Label.Text, date, pt.Y);
         }
 
         private string zedHits2_PointValueEvent(ZedGraphControl sender, GraphPane pane, CurveItem curve, int iPt)
@@ -251,8 +252,6 @@ namespace Indihiang.Modules
 
             return String.Format("[{0:yyyy-MMM} --> {1:f2} Hit(s)]", date, pt.Y);
         }
-
-
 
         //private void backgroundJob_DoWork(object sender, DoWorkEventArgs e)
         //{
@@ -390,7 +389,7 @@ namespace Indihiang.Modules
 
                 if (items[0] == "Hits per Month")
                     _listHits3 = new List<DumpData>(facade.GetMonthHitsByParams(Convert.ToInt32(items[1])));
-               
+
             }
             catch (Exception err)
             {

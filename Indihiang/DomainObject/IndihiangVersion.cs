@@ -7,7 +7,7 @@ namespace Indihiang.DomainObject
 {
     [Serializable]
     public class IndihiangVersion
-    {        
+    {
         public string Ver { set; get; }
         public string Url { set; get; }
 

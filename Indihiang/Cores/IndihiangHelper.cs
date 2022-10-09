@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 
 using Indihiang.Data;
+using System.Text;
+
 namespace Indihiang.Cores
 {
     public sealed class IndihiangHelper
@@ -18,6 +20,7 @@ namespace Indihiang.Cores
 
             return item;
         }
+
         public static List<string> ParseFile(string listFile)
         {
             List<string> list = new List<string>();
@@ -42,19 +45,22 @@ namespace Indihiang.Cores
 
             return list;
         }
+
         public static string GetIPCountryDb()
         {
             string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            return String.Format("{0}\\Media\\ipcountry.db", path);
+            return $"{path}\\Media\\ipcountry.db";
         }
-        public static string GetIndihiangFile(string year,string guid)
+
+        public static string GetIndihiangFile(string year, string guid)
         {
             if (string.IsNullOrEmpty(year))
                 return string.Empty;
 
             string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            return String.Format("{0}\\Data\\{1}\\log{2}.dat", path, guid, year);
+            return $"{path}\\Data\\{guid}\\log{year}.dat";
         }
+
         public static List<string> GetIndihiangFileList(string guid)
         {
             List<string> list = new List<string>();
@@ -66,13 +72,14 @@ namespace Indihiang.Cores
             else
             {
                 string dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string path = String.Format("{0}\\Data\\{1}\\", dir, guid);
-                if(Directory.Exists(path))
+                string path = $"{dir}\\Data\\{guid}\\";
+                if (Directory.Exists(path))
                     list = new List<string>(Directory.GetFiles(path, "*.dat"));
             }
 
             return list;
         }
+
         public static void CopyLogDB(string file)
         {
             if (string.IsNullOrEmpty(file))
@@ -82,25 +89,25 @@ namespace Indihiang.Cores
                 Directory.CreateDirectory(Path.GetDirectoryName(file));
 
             string dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string sourceFile = String.Format("{0}\\Data\\dump_indihiang.dat", dir);
+            string sourceFile = $"{dir}\\Data\\dump_indihiang.dat";
             try
             {
                 File.Copy(sourceFile, file);
-				return;
+                return;
             }
             catch (Exception/* err*/)
-			{
-				//
-			}
+            {
+                //
+            }
 
-			try
-			{
-				File.Copy("dump_indihiang.dat", file);
-			}
-			catch (Exception err)
-			{
-				System.Windows.Forms.MessageBox.Show("Failed to copy database template.\nNo data can be presented to you.\n\nException: " + err.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-			}
+            try
+            {
+                File.Copy("dump_indihiang.dat", file);
+            }
+            catch (Exception err)
+            {
+                System.Windows.Forms.MessageBox.Show("Failed to copy database template.\nNo data can be presented to you.\n\nException: " + err.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
         }
 
         public static string GetYearDataIndihiangFile(string file)
@@ -115,6 +122,59 @@ namespace Indihiang.Cores
             }
 
             return null;
+        }
+
+        public static string GetFilterDataIndihiangFile(string file, string filter)
+        {
+            DataHelper helper = new DataHelper(file);
+            List<Indihiang.DomainObject.Indihiang> list = new List<Indihiang.DomainObject.Indihiang>(helper.GetAllIndihiang());
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].Sys_Item == $"filter_{filter}")
+                    return list[i].Sys_Value;
+            }
+
+            return null;
+        }
+
+        public static string GetFilter(string file)
+        {
+            List<string> filter = new List<string>();
+            DataHelper helper = new DataHelper(file);
+            List<Indihiang.DomainObject.Indihiang> list = new List<Indihiang.DomainObject.Indihiang>(helper.GetAllIndihiang());
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (!String.IsNullOrEmpty(list[i].Sys_Value))
+                {
+                    switch (list[i].Sys_Item)
+                    {
+                        case "filter_page":
+                            filter.Add($" page_access regexp '{list[i].Sys_Value}' ");
+                            break;
+                        case "filter_client_ip":
+                            filter.Add($" client_ip regexp '{list[i].Sys_Value}' ");
+                            break;
+                        case "filter_server_ip":
+                            filter.Add($" server_ip regexp '{list[i].Sys_Value}' ");
+                            break;
+                        case "filter_username":
+                            filter.Add($" access_username regexp '{list[i].Sys_Value}' ");
+                            break;
+                        case "filter_date_from":
+                            filter.Add($" a_date >= '{list[i].Sys_Value}' ");
+                            break;
+                        case "filter_date_to":
+                            filter.Add($" a_date <= '{list[i].Sys_Value}' ");
+                            break;
+                    }
+                }
+            }
+            if (filter.Count > 0)
+                return $" where {String.Join(" and ", filter.ToArray())}";
+
+            return "";
         }
 
         public static void InitialIndihiangFile(string file, string year)
@@ -162,11 +222,48 @@ namespace Indihiang.Cores
                 obj.Sys_Item = "last_acces";
                 obj.Sys_Value = DateTime.Now.ToString();
                 helper.InsertIndihiang(obj);
-
             }
             catch (Exception) { }
         }
 
+        public static void SetFilter(string file, string filterPage, string filterClientIP, string filterServerIP, string filterUsername, string filterDateFrom, string filterDateTo)
+        {
+            try
+            {
+                DataHelper helper = new DataHelper(file);
+
+                Indihiang.DomainObject.Indihiang obj = new Indihiang.DomainObject.Indihiang();
+                obj.Sys_Item = "filter_page";
+                obj.Sys_Value = filterPage;
+                helper.InsertIndihiang(obj);
+
+                obj = new Indihiang.DomainObject.Indihiang();
+                obj.Sys_Item = "filter_client_ip";
+                obj.Sys_Value = filterClientIP;
+                helper.InsertIndihiang(obj);
+
+                obj = new Indihiang.DomainObject.Indihiang();
+                obj.Sys_Item = "filter_server_ip";
+                obj.Sys_Value = filterServerIP;
+                helper.InsertIndihiang(obj);
+
+                obj = new Indihiang.DomainObject.Indihiang();
+                obj.Sys_Item = "filter_username";
+                obj.Sys_Value = filterUsername;
+                helper.InsertIndihiang(obj);
+
+                obj = new Indihiang.DomainObject.Indihiang();
+                obj.Sys_Item = "filter_date_from";
+                obj.Sys_Value = filterDateFrom;
+                helper.InsertIndihiang(obj);
+
+                obj = new Indihiang.DomainObject.Indihiang();
+                obj.Sys_Item = "filter_date_to";
+                obj.Sys_Value = filterDateTo;
+                helper.InsertIndihiang(obj);
+            }
+            catch (Exception) { }
+        }
 
         public static string GetMonth(int month)
         {
@@ -210,6 +307,7 @@ namespace Indihiang.Cores
                     m = "December";
                     break;
             }
+
             return m;
         }
         public static int GetMonth(string month)
@@ -254,6 +352,7 @@ namespace Indihiang.Cores
                     m = 12;
                     break;
             }
+
             return m;
         }
 
@@ -263,7 +362,7 @@ namespace Indihiang.Cores
                 return "-";
 
             double s = time;
-            string[] format = new string[] { "{0} miliseconds","{0} seconds", "{0} minutes", "{0} hours"};
+            string[] format = new string[] { "{0} miliseconds", "{0} seconds", "{0} minutes", "{0} hours" };
             int i = 0;
             if (time >= 1000 && time < 60000)
             {
@@ -283,7 +382,6 @@ namespace Indihiang.Cores
 
             return string.Format(format[i], s.ToString("#.##"));
         }
-
 
         public static string CheckUserAgent(string line)
         {
@@ -334,7 +432,6 @@ namespace Indihiang.Cores
                 line.ToLower().Contains("sogou.") || line.Contains("baidu.") || line.Contains("kosmix."))
                 return "Search Engines";
 
-
             return "Referring Sites";
         }
 
@@ -351,26 +448,25 @@ namespace Indihiang.Cores
             }
             else
             {
-				try
-				{
-					MatchCollection matches = Regex.Matches(IPaddress, @"\d+\.\d+\.\d+\.\d+");
-					if (matches.Count != 0)
-						IPaddress = matches[matches.Count - 1].Value;
+                try
+                {
+                    MatchCollection matches = Regex.Matches(IPaddress, @"\d+\.\d+\.\d+\.\d+");
+                    if (matches.Count != 0)
+                        IPaddress = matches[matches.Count - 1].Value;
 
-					arrDec = IPaddress.Split('.');
-					for (i = arrDec.Length - 1; i >= 0; i--)
-					{
-						num += ((int.Parse(arrDec[i]) % 256) * Math.Pow(256, (3 - i)));
-					}
-					return num;
-				}
-				catch
-				{
-					return 0;
-				}
+                    arrDec = IPaddress.Split('.');
+                    for (i = arrDec.Length - 1; i >= 0; i--)
+                    {
+                        num += ((int.Parse(arrDec[i]) % 256) * Math.Pow(256, (3 - i)));
+                    }
+                    return num;
+                }
+                catch
+                {
+                    return 0;
+                }
             }
         }
-
 
         /// Credits to
         /// http://blogs.interakting.co.uk/brad/archive/2008/01/24/c-getting-a-user-friendly-file-size-as-a-string.aspx
@@ -387,6 +483,5 @@ namespace Indihiang.Cores
             }
             return string.Format(format[i], s.ToString("###,###,##0.##"));
         }
-
     }
 }

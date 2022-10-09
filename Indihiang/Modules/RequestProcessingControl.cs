@@ -15,7 +15,7 @@ namespace Indihiang.Modules
         private SynchronizationContext _synContext;
         private string _guid;
         private string _fileName;
-        private List<string> _listYears = new List<string>();        
+        private List<string> _listYears = new List<string>();
         private List<DumpData> _listData;
 
         public RequestProcessingControl()
@@ -50,6 +50,7 @@ namespace Indihiang.Modules
                 _fileName = value;
             }
         }
+
         public List<string> ListOfYear
         {
             set
@@ -61,6 +62,7 @@ namespace Indihiang.Modules
                 return _listYears;
             }
         }
+
         public void Populate()
         {
             cboParams1.Items.AddRange(_listYears.ToArray());
@@ -69,7 +71,6 @@ namespace Indihiang.Modules
             RenderInfoEventArgs info = new RenderInfoEventArgs(_guid, LogFeature.REQUEST, _fileName);
             _synContext.Post(OnRenderHandler, info);
         }
-
         #endregion
 
         protected virtual void OnRenderHandler(RenderInfoEventArgs e)
@@ -77,6 +78,7 @@ namespace Indihiang.Modules
             if (RenderHandler != null)
                 RenderHandler(this, e);
         }
+
         private void SetGridLayout()
         {
             dataGridViewRequest.ColumnCount = 5;
@@ -165,7 +167,5 @@ namespace Indihiang.Modules
             btnGenerate1.Text = "Generate";
             btnGenerate1.Enabled = true;
         }
-
-
     }
 }

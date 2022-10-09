@@ -22,6 +22,7 @@ namespace Indihiang.DomainObject
                 _id = value;
             }
         }
+
         public string Sys_Item
         {
             get
@@ -35,6 +36,7 @@ namespace Indihiang.DomainObject
                 _sys_item = value;
             }
         }
+
         public string Sys_Value
         {
             get
@@ -48,6 +50,7 @@ namespace Indihiang.DomainObject
                 _sys_value = value;
             }
         }
+
         public DateTime UpdateDate
         {
             get
@@ -61,7 +64,6 @@ namespace Indihiang.DomainObject
                 _updateDate = value;
             }
         }
-
 
         public Indihiang() { }
     }

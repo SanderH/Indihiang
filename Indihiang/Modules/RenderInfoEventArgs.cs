@@ -22,6 +22,7 @@ namespace Indihiang.Modules
                 _id = value;
             }
         }
+
         public LogFeature Feature
         {
             get
@@ -35,6 +36,7 @@ namespace Indihiang.Modules
                 _feature = value;
             }
         }
+
         public string FileName
         {
             get
@@ -55,6 +57,7 @@ namespace Indihiang.Modules
             _feature = feature;
             _fileName = fileName;
         }
+
         public RenderInfoEventArgs()
         {
             _id = Guid.NewGuid().ToString();
